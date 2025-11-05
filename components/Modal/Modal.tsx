@@ -32,6 +32,10 @@ export default function Modal({ children, onClose, modalClass }: Props) {
 		}
 	}, [onClose])
 
+	if (typeof window !== "object") {
+		return null
+	}
+
 	return createPortal(
 		<div
 			className={css.backdrop}
