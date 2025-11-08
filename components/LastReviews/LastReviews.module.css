@@ -1,0 +1,27 @@
+.lastReviews {
+  padding: 64px 20px;
+}
+
+.title {
+  font-family: var(--second-family);
+  margin-bottom: 40px;
+  line-height: 1.2;
+  font-weight: 400;
+  font-size: 36px;
+  letter-spacing: -0.01em;
+}
+
+@media screen and (min-width: 768px) {
+  .lastReviews {
+    padding: 64px 32px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .lastReviews {
+    padding: 112px 64px;
+  }
+  .title {
+    font-size: 48px;
+  }
+}
