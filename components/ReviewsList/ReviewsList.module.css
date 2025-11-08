@@ -96,14 +96,12 @@
   stroke: var(--color-white);
 }
 
-.btnPrev:disabled,
-.btnNext:disabled {
+.btnDisabled {
   background: var(--color-deco);
   opacity: 0.4;
+  pointer-events: none;
 }
-
-.btnPrev:disabled .arrow,
-.btnNext:disabled .arrow {
+.btnDisabled .arrow {
   fill: var(--color-scheme-1-text);
   opacity: 0.4;
 }
