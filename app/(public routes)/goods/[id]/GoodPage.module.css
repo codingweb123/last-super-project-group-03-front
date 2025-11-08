@@ -1,0 +1,594 @@
+/* app/(public routes)/goods/[id]/GoodPage.module.css */
+
+
+
+
+/* app/(public routes)/goods/[id]/GoodPage.module.css */
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  width: 100%;
+}
+
+/* Основний layout - товар + інформація */
+.productLayout {
+  display: flex;
+  gap: 60px;
+  margin-bottom: 40px;
+  align-items: flex-start;
+}
+
+/* Секція з фото товару (ЗЛІВА) */
+.gallerySection {
+  flex: 1;
+  max-width: 600px;
+}
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.imageContainer {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Секція інформації про товар (СПРАВА) */
+.productInfo {
+  flex: 0 0 400px;
+  padding: 0 0 16px 0;
+}
+
+/* Шлях до товару (breadcrumb) */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  color: #666;
+  flex-wrap: wrap;
+}
+
+.breadcrumbItem {
+  color: #666;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.breadcrumbItem:hover {
+  color: #007bff;
+}
+
+.breadcrumbItemCurrent {
+  color: #333;
+  font-weight: 600;
+}
+
+.breadcrumbDivider {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Рядок з ціною, рейтингом та відгуками */
+.priceRatingRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+
+.price {
+  font-size: 1.8rem;
+  color: #000;
+}
+
+
+.verticalDivider {
+  color: #666;
+  font-size: 1.2rem;
+  margin: 0 4px;
+}
+
+.dotDivider {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.ratingSection {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.reviewCount {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Оновлені стилі для зірочок рейтингу з SVG */
+.starFull,
+.starHalf,
+.starEmpty {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 2px;
+}
+
+.starFull svg {
+  fill: #000000;
+}
+
+.starEmpty svg {
+  fill: none;
+  stroke: #000000;
+  stroke-width: 1;
+}
+
+.ratingValue {
+  color: #666;
+  font-size: 0.9rem;
+  margin-left: 2px;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+/* Інформація про доставку */
+.deliveryInfo {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #000000;
+  text-align: center;
+}
+
+/* Розділ з повним описом товару */
+.fullDescriptionSection {
+  margin-top: 30px;
+  /* Видалено border-top */
+}
+
+.fullDescriptionTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+  padding-bottom: 8px;
+}
+
+.underlinedTitle {
+  border-bottom: 2px solid rgba(40, 167, 69, 0.5); /* Підкреслення тільки для слова "Опис" */
+  padding-bottom: 4px;
+}
+
+.fullDescriptionText {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 0;
+}
+
+/* Секції вибору розміру та кольору */
+.optionSection {
+  margin-bottom: 25px;
+}
+
+.optionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+/* Вибір розміру - випадаючий список */
+.sizeSelectWrapper {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+}
+
+.sizeSelect {
+  width: 100%;
+  padding: 14px 50px 14px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  position: relative;
+  z-index: 2;
+}
+
+.sizeSelect:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.sizeSelect:hover {
+  border-color: #007bff;
+  background-color: #f8f9fa;
+}
+
+/* Кастомна стрілка для select */
+.selectArrow {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.sizeSelect:focus + .selectArrow,
+.sizeSelect:hover + .selectArrow {
+  color: #007bff;
+}
+
+/* Вибір кольору */
+.colorSelector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.colorButton {
+  padding: 12px 20px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 90px;
+  text-align: center;
+}
+
+.colorButton:hover {
+  border-color: #007bff;
+  background-color: #f8f9fa;
+}
+
+.colorButtonActive {
+  border-color: #007bff;
+  background-color: #007bff;
+  color: white;
+}
+
+.colorButtonActive:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* Контейнер для кнопок та лічильника */
+.cartActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Кнопка Додати в кошик */
+.addToCartButton {
+  flex: 1;
+  padding: 16px 24px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.addToCartButton:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.addToCartButton:active {
+  transform: translateY(0);
+}
+
+/* Лічильник товарів у кошику - чорний текст, вирівнювання по лівому краю */
+.cartCounter {
+  display: block;
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  min-width: 60px;
+  min-height: 56px;
+  text-align: left;
+}
+
+.cartCount {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #000000;
+  display: block;
+}
+
+/* Кнопка Купити зараз */
+.buyNowButton {
+  width: 100%;
+  padding: 16px 24px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.buyNowButton:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.buyNowButton:active {
+  transform: translateY(0);
+}
+
+/* Стилі для помилок */
+.error {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.error h1 {
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+  .productLayout {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .gallerySection {
+    max-width: 100%;
+  }
+  
+  .productInfo {
+    flex: 1;
+    max-width: 100%;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .price {
+    font-size: 1.5rem;
+  }
+  
+  .priceRatingRow {
+    gap: 6px;
+  }
+  
+  .verticalDivider {
+    font-size: 1rem;
+    margin: 0 3px;
+  }
+  
+  .breadcrumb {
+    font-size: 0.85rem;
+    gap: 6px;
+  }
+  
+  .deliveryInfo {
+    font-size: 0.85rem;
+  }
+  
+  .fullDescriptionTitle {
+    font-size: 1.2rem;
+  }
+  
+  .fullDescriptionText {
+    font-size: 0.95rem;
+  }
+  
+  .sizeSelect,
+  .colorSelector {
+    justify-content: center;
+  }
+  
+  .main {
+    padding: 15px;
+  }
+
+  /* Адаптивність для кнопок та лічильника */
+  .sizeSelect {
+    padding: 12px 45px 12px 14px;
+    font-size: 0.95rem;
+  }
+  
+  .selectArrow {
+    right: 14px;
+  }
+  
+  .cartActions {
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .addToCartButton,
+  .buyNowButton {
+    padding: 14px 20px;
+    font-size: 1rem;
+    min-height: 52px;
+  }
+  
+  .cartCounter {
+    padding: 14px 18px;
+    min-width: 55px;
+    min-height: 52px;
+  }
+  
+  .cartCount {
+    font-size: 1.3rem;
+  }
+
+  /* Адаптивність для зірочок */
+  .starFull svg,
+  .starHalf svg,
+  .starEmpty svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  .priceRatingRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .verticalDivider,
+  .dotDivider {
+    display: none;
+  }
+  
+  .price {
+    font-size: 1.4rem;
+  }
+  
+  .breadcrumb {
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+  
+  .deliveryInfo {
+    font-size: 0.8rem;
+  }
+  
+  .fullDescriptionTitle {
+    font-size: 1.1rem;
+  }
+  
+  .fullDescriptionText {
+    font-size: 0.9rem;
+  }
+  
+  .colorButton {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    min-width: 80px;
+  }
+
+  /* Адаптивність для кнопок та лічильника на малих екранах */
+  .sizeSelect {
+    padding: 10px 40px 10px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .selectArrow {
+    right: 12px;
+  }
+  
+  .selectArrow svg {
+    width: 10px;
+    height: 6px;
+  }
+  
+  .cartActions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .addToCartButton,
+  .buyNowButton {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    min-height: 48px;
+  }
+  
+  .cartCounter {
+    width: 100%;
+    padding: 12px;
+    min-height: 48px;
+  }
+  
+  .cartCount {
+    font-size: 1.2rem;
+  }
+
+  /* Адаптивність для зірочок на малих екранах */
+  .starFull svg,
+  .starHalf svg,
+  .starEmpty svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .ratingSection {
+    gap: 1px;
+  }
+}
