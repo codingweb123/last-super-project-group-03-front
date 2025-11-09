@@ -27,7 +27,7 @@ export default function ProfileClient({ ordersList }: ProfileClientProps) {
                 <div className={css.ordersContainer}>
                     <h2 className={`${css.h2} ${css.ordersTitle}`}>Мої замовлення</h2>
                     {
-                        0
+                        ordersList.length
                             ?
                             <div className={css.orders}>
                                 <ul>
