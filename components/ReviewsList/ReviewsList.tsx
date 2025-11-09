@@ -6,10 +6,9 @@ import toast from "react-hot-toast";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Keyboard, A11y } from "swiper/modules";
 import "swiper/css";
-
 import css from "./ReviewsList.module.css";
+import type { Swiper as SwiperInstance } from "swiper";
 
-/* -------------------- Types -------------------- */
 type ApiFeedback = {
   _id: string;
   author: string;
@@ -41,7 +40,6 @@ type Feedback = {
   updatedAt?: string;
 };
 
-/* -------------------- API -------------------- */
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ??
   "https://last-super-project-group-03-back.onrender.com";
@@ -99,7 +97,6 @@ async function fetchAllFeedbacks(): Promise<Feedback[]> {
     all.push(...(data.feedbacks ?? []).map(normalizeFeedback));
   }
 
-  // Сортуємо за датою оновлення (найновіші спочатку)
   const parseTime = (f: Feedback) =>
     Date.parse(f.updatedAt || f.createdAt || f.date || "") || 0;
   all.sort((a, b) => parseTime(b) - parseTime(a));
@@ -107,7 +104,6 @@ async function fetchAllFeedbacks(): Promise<Feedback[]> {
   return all;
 }
 
-/* -------------------- Star Rating -------------------- */
 function StarRating({ value = 0, max = 5 }: { value?: number; max?: number }) {
   const safe = Math.max(0, Math.min(max, Number(value) || 0));
   const full = Math.floor(safe);
@@ -129,7 +125,6 @@ function StarRating({ value = 0, max = 5 }: { value?: number; max?: number }) {
   );
 }
 
-/* -------------------- Review Card -------------------- */
 function ReviewCard({ item }: { item: Feedback }) {
   return (
     <>
@@ -149,9 +144,6 @@ function ReviewCard({ item }: { item: Feedback }) {
     </>
   );
 }
-
-/* -------------------- Main Component -------------------- */
-import type { Swiper as SwiperInstance } from "swiper";
 
 export default function ReviewsList() {
   const { data, isLoading, isError, error, isSuccess } = useQuery({
@@ -174,28 +166,39 @@ export default function ReviewsList() {
 
   const [visibleCount, setVisibleCount] = useState(3);
   const [swiper, setSwiper] = useState<SwiperInstance | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const visibleReviews = feedbacks.slice(0, visibleCount);
-  const hasMore = visibleCount < feedbacks.length;
-  const canPrev = visibleCount > 3;
+  const canPrev = activeIndex > 0;
+  const hasMoreWithinRendered = activeIndex + 3 < visibleCount;
+  const canAddMore = visibleCount < feedbacks.length;
 
-  // автоматична прокрутка до останнього видимого слайда
   useEffect(() => {
-    if (swiper) {
-      const target = Math.max(
-        0,
-        Math.min(visibleCount - 1, feedbacks.length - 1)
-      );
-      swiper.slideTo(target);
-    }
+    if (!swiper) return;
+    const target = Math.max(
+      0,
+      Math.min(visibleCount - 1, feedbacks.length - 1)
+    );
+    swiper.slideTo(target);
   }, [visibleCount, swiper, feedbacks.length]);
 
-  const handleNext = () => {
-    if (hasMore) setVisibleCount((v) => Math.min(v + 3, feedbacks.length));
+  const handleSlideChange = (sw: SwiperInstance) => {
+    setActiveIndex(sw.activeIndex);
   };
 
   const handlePrev = () => {
-    if (canPrev) setVisibleCount((v) => Math.max(3, v - 3));
+    if (!swiper) return;
+    swiper.slideTo(Math.max(0, activeIndex - 3));
+  };
+
+  const handleNext = () => {
+    if (hasMoreWithinRendered && swiper) {
+      swiper.slideTo(Math.min(visibleCount - 1, activeIndex + 3));
+      return;
+    }
+    if (canAddMore) {
+      setVisibleCount((v) => Math.min(v + 3, feedbacks.length));
+    }
   };
 
   if (isLoading) return <p className={css.text}>Завантаження...</p>;
@@ -207,6 +210,7 @@ export default function ReviewsList() {
       <Swiper
         modules={[Keyboard, A11y]}
         onSwiper={setSwiper}
+        onSlideChange={handleSlideChange}
         keyboard={{ enabled: true, onlyInViewport: true }}
         a11y={{ enabled: true }}
         spaceBetween={32}
@@ -229,7 +233,7 @@ export default function ReviewsList() {
       <div className={css.nav}>
         <button
           type="button"
-          className={css.btnPrev}
+          className={`${css.btnPrev} ${!canPrev ? css.btnDisabled : ""}`}
           aria-label="Попередні"
           onClick={handlePrev}
           disabled={!canPrev}
@@ -241,10 +245,10 @@ export default function ReviewsList() {
 
         <button
           type="button"
-          className={`${css.btnNext} ${!hasMore ? css.navBtnDisabled : ""}`}
+          className={`${css.btnNext} ${!(hasMoreWithinRendered || canAddMore) ? css.btnDisabled : ""}`}
           aria-label="Наступні"
           onClick={handleNext}
-          disabled={!hasMore}
+          disabled={!(hasMoreWithinRendered || canAddMore)}
         >
           <svg className={`${css.arrow} ${css.arrowRight}`} aria-hidden="true">
             <use href="/icons.svg#i-arrow" />
