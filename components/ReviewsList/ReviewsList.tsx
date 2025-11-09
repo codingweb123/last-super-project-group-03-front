@@ -149,7 +149,6 @@ export default function ReviewsList() {
   const { data, isLoading, isError, error, isSuccess } = useQuery({
     queryKey: ["feedbacks", "all"],
     queryFn: fetchAllFeedbacks,
-    staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
 
@@ -167,11 +166,28 @@ export default function ReviewsList() {
   const [visibleCount, setVisibleCount] = useState(3);
   const [swiper, setSwiper] = useState<SwiperInstance | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [step, setStep] = useState(1);
 
   const visibleReviews = feedbacks.slice(0, visibleCount);
+
+  const getSlidesPerView = (sw: SwiperInstance | null) => {
+    if (!sw) return 1;
+    const spv = sw.params.slidesPerView;
+    return typeof spv === "number" ? spv : 1;
+  };
+
+  const syncStepFromSwiper = (sw: SwiperInstance | null) => {
+    const s = getSlidesPerView(sw);
+    setStep(s);
+  };
+
   const canPrev = activeIndex > 0;
-  const hasMoreWithinRendered = activeIndex + 3 < visibleCount;
+  const hasMoreWithinRendered = activeIndex + step < visibleCount;
   const canAddMore = visibleCount < feedbacks.length;
+
+  useEffect(() => {
+    setVisibleCount((v) => Math.max(step, v));
+  }, [step]);
 
   useEffect(() => {
     if (!swiper) return;
@@ -188,16 +204,16 @@ export default function ReviewsList() {
 
   const handlePrev = () => {
     if (!swiper) return;
-    swiper.slideTo(Math.max(0, activeIndex - 3));
+    swiper.slideTo(Math.max(0, activeIndex - step));
   };
 
   const handleNext = () => {
     if (hasMoreWithinRendered && swiper) {
-      swiper.slideTo(Math.min(visibleCount - 1, activeIndex + 3));
+      swiper.slideTo(Math.min(visibleCount - 1, activeIndex + step));
       return;
     }
     if (canAddMore) {
-      setVisibleCount((v) => Math.min(v + 3, feedbacks.length));
+      setVisibleCount((v) => Math.min(v + step, feedbacks.length));
     }
   };
 
@@ -209,7 +225,12 @@ export default function ReviewsList() {
     <div>
       <Swiper
         modules={[Keyboard, A11y]}
-        onSwiper={setSwiper}
+        onSwiper={(sw) => {
+          setSwiper(sw);
+          syncStepFromSwiper(sw);
+        }}
+        onBreakpoint={(sw) => syncStepFromSwiper(sw)}
+        onResize={(sw) => syncStepFromSwiper(sw)}
         onSlideChange={handleSlideChange}
         keyboard={{ enabled: true, onlyInViewport: true }}
         a11y={{ enabled: true }}
