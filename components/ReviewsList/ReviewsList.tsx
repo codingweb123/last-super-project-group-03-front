@@ -1,14 +1,15 @@
 "use client";
 
-import css from "./ReviewsList.module.css";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Keyboard, A11y } from "swiper/modules";
 import "swiper/css";
-import type { Swiper as SwiperInstance } from "swiper";
 
-/* -------------------- TYPES -------------------- */
+import css from "./ReviewsList.module.css";
+
+/* -------------------- Types -------------------- */
 type ApiFeedback = {
   _id: string;
   author: string;
@@ -19,6 +20,7 @@ type ApiFeedback = {
   createdAt?: string;
   updatedAt?: string;
 };
+
 type ApiResponse = {
   page: number;
   perPage: number;
@@ -26,6 +28,7 @@ type ApiResponse = {
   totalPages: number;
   feedbacks: ApiFeedback[];
 };
+
 type Feedback = {
   _id: string;
   author: string;
@@ -38,15 +41,13 @@ type Feedback = {
   updatedAt?: string;
 };
 
-/* -------------------- CONFIG -------------------- */
+/* -------------------- API -------------------- */
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ??
   "https://last-super-project-group-03-back.onrender.com";
 const ENDPOINT = `${API_BASE}/api/feedbacks`;
 const PER_PAGE = 6;
-const PAGE_CHUNK = 3;
 
-/* -------------------- HELPERS -------------------- */
 function normalizeFeedback(item: ApiFeedback): Feedback {
   if (typeof item.goodId === "string") {
     return {
@@ -77,13 +78,6 @@ function normalizeFeedback(item: ApiFeedback): Feedback {
   };
 }
 
-// updatedAt → createdAt → date (DESC)
-function toTime(x: Pick<Feedback, "updatedAt" | "createdAt" | "date">): number {
-  const tryParse = (v?: string) => (v ? Date.parse(v) : NaN);
-  const t = tryParse(x.updatedAt) ?? tryParse(x.createdAt) ?? tryParse(x.date);
-  return Number.isFinite(t) ? (t as number) : 0;
-}
-
 async function fetchAllFeedbacks(): Promise<Feedback[]> {
   const firstRes = await fetch(`${ENDPOINT}?page=1&perPage=${PER_PAGE}`, {
     cache: "no-store",
@@ -105,11 +99,15 @@ async function fetchAllFeedbacks(): Promise<Feedback[]> {
     all.push(...(data.feedbacks ?? []).map(normalizeFeedback));
   }
 
-  all.sort((a, b) => toTime(b) - toTime(a));
+  // Сортуємо за датою оновлення (найновіші спочатку)
+  const parseTime = (f: Feedback) =>
+    Date.parse(f.updatedAt || f.createdAt || f.date || "") || 0;
+  all.sort((a, b) => parseTime(b) - parseTime(a));
+
   return all;
 }
 
-/* -------------------- SUBCOMPONENTS -------------------- */
+/* -------------------- Star Rating -------------------- */
 function StarRating({ value = 0, max = 5 }: { value?: number; max?: number }) {
   const safe = Math.max(0, Math.min(max, Number(value) || 0));
   const full = Math.floor(safe);
@@ -131,6 +129,7 @@ function StarRating({ value = 0, max = 5 }: { value?: number; max?: number }) {
   );
 }
 
+/* -------------------- Review Card -------------------- */
 function ReviewCard({ item }: { item: Feedback }) {
   return (
     <>
@@ -151,123 +150,107 @@ function ReviewCard({ item }: { item: Feedback }) {
   );
 }
 
-/* -------------------- MAIN -------------------- */
+/* -------------------- Main Component -------------------- */
+import type { Swiper as SwiperInstance } from "swiper";
+
 export default function ReviewsList() {
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["feedbacks", "all", PER_PAGE],
+  const { data, isLoading, isError, error, isSuccess } = useQuery({
+    queryKey: ["feedbacks", "all"],
     queryFn: fetchAllFeedbacks,
     staleTime: 60_000,
     refetchOnWindowFocus: false,
   });
 
+  useEffect(() => {
+    if (isLoading)
+      toast.loading("Завантаження відгуків...", { id: "feedbacks" });
+    if (isSuccess)
+      toast.success("Відгуки успішно завантажені ✅", { id: "feedbacks" });
+    if (isError)
+      toast.error("Помилка завантаження відгуків ❌", { id: "feedbacks" });
+  }, [isLoading, isError, isSuccess]);
+
   const feedbacks = data ?? [];
 
-  // стартова кількість: 1/2/3
-  const getInitialVisible = () => {
-    if (typeof window === "undefined") return 1;
-    const w = window.innerWidth;
-    if (w >= 1440) return 3;
-    if (w >= 768) return 2;
-    return 1;
-  };
-  const [minBase] = useState<number>(getInitialVisible); // фіксуємо початкове значення
-  const [visibleCount, setVisibleCount] = useState<number>(minBase);
+  const [visibleCount, setVisibleCount] = useState(3);
   const [swiper, setSwiper] = useState<SwiperInstance | null>(null);
 
-  const canGoPrev = visibleCount > minBase;
-  const canGoNext = visibleCount < feedbacks.length;
+  const visibleReviews = feedbacks.slice(0, visibleCount);
+  const hasMore = visibleCount < feedbacks.length;
+  const canPrev = visibleCount > 3;
+
+  // автоматична прокрутка до останнього видимого слайда
+  useEffect(() => {
+    if (swiper) {
+      const target = Math.max(
+        0,
+        Math.min(visibleCount - 1, feedbacks.length - 1)
+      );
+      swiper.slideTo(target);
+    }
+  }, [visibleCount, swiper, feedbacks.length]);
 
   const handleNext = () => {
-    setVisibleCount((prev) => Math.min(prev + PAGE_CHUNK, feedbacks.length));
-  };
-  const handlePrev = () => {
-    setVisibleCount((prev) => Math.max(minBase, prev - PAGE_CHUNK));
+    if (hasMore) setVisibleCount((v) => Math.min(v + 3, feedbacks.length));
   };
 
-  // Після зміни visibleCount — прокрутити слайдер до останньої видимої картки
-  useEffect(() => {
-    if (!swiper) return;
-    const target = Math.max(
-      0,
-      Math.min(visibleCount - 1, feedbacks.length - 1)
-    );
-    swiper.slideTo(target);
-  }, [visibleCount, swiper, feedbacks.length]);
+  const handlePrev = () => {
+    if (canPrev) setVisibleCount((v) => Math.max(3, v - 3));
+  };
+
+  if (isLoading) return <p className={css.text}>Завантаження...</p>;
+  if (isError)
+    return <p className={css.text}>Помилка: {(error as Error)?.message}</p>;
 
   return (
     <div>
-      {isLoading && (
-        <p className={css.text} style={{ opacity: 0.6 }}>
-          Завантаження відгуків…
-        </p>
-      )}
+      <Swiper
+        modules={[Keyboard, A11y]}
+        onSwiper={setSwiper}
+        keyboard={{ enabled: true, onlyInViewport: true }}
+        a11y={{ enabled: true }}
+        spaceBetween={32}
+        slidesPerView={1}
+        breakpoints={{
+          768: { slidesPerView: 2, spaceBetween: 32 },
+          1440: { slidesPerView: 3, spaceBetween: 32 },
+        }}
+        watchOverflow
+        className={css.swiper}
+        tag="ul"
+      >
+        {visibleReviews.map((item) => (
+          <SwiperSlide key={item._id} className={css.item} tag="li">
+            <ReviewCard item={item} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
-      {isError && (
-        <p className={css.text} style={{ color: "var(--color-error,#d33)" }}>
-          Помилка: {(error as Error)?.message}
-        </p>
-      )}
+      <div className={css.nav}>
+        <button
+          type="button"
+          className={css.btnPrev}
+          aria-label="Попередні"
+          onClick={handlePrev}
+          disabled={!canPrev}
+        >
+          <svg className={css.arrow} aria-hidden="true">
+            <use href="/icons.svg#i-arrow" />
+          </svg>
+        </button>
 
-      {!isLoading && !isError && feedbacks.length > 0 && (
-        <>
-          <Swiper
-            modules={[Keyboard, A11y]}
-            onSwiper={setSwiper}
-            slidesPerView={1}
-            spaceBetween={16}
-            keyboard={{ enabled: true, onlyInViewport: true }}
-            a11y={{ enabled: true }}
-            watchOverflow={true}
-            breakpoints={{
-              768: { slidesPerView: 2, spaceBetween: 32 },
-              1440: { slidesPerView: 3, spaceBetween: 32 },
-            }}
-            tag="ul"
-            className={css.list}
-          >
-            {feedbacks.slice(0, visibleCount).map((f) => (
-              <SwiperSlide key={f._id} tag="li" className={css.item}>
-                <ReviewCard item={f} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-
-          <div className={css.nav}>
-            <button
-              type="button"
-              className={css.btnPrev}
-              aria-label="Показати попередні"
-              onClick={handlePrev}
-              disabled={!canGoPrev}
-            >
-              <svg className={css.arrow} aria-hidden="true">
-                <use href="/icons.svg#i-arrow" />
-              </svg>
-            </button>
-
-            <button
-              type="button"
-              className={css.btnNext}
-              aria-label="Показати наступні"
-              onClick={handleNext}
-              disabled={!canGoNext}
-            >
-              <svg
-                className={`${css.arrow} ${css.arrowRight}`}
-                aria-hidden="true"
-              >
-                <use href="/icons.svg#i-arrow" />
-              </svg>
-            </button>
-          </div>
-        </>
-      )}
-
-      {!isLoading && !isError && feedbacks.length === 0 && (
-        <p className={css.text} style={{ opacity: 0.8 }}>
-          Наразі відгуків немає.
-        </p>
-      )}
+        <button
+          type="button"
+          className={`${css.btnNext} ${!hasMore ? css.navBtnDisabled : ""}`}
+          aria-label="Наступні"
+          onClick={handleNext}
+          disabled={!hasMore}
+        >
+          <svg className={`${css.arrow} ${css.arrowRight}`} aria-hidden="true">
+            <use href="/icons.svg#i-arrow" />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }
