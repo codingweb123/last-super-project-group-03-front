@@ -8,10 +8,10 @@
     display: flex;
     flex-direction: column;
     row-gap: 8px;
-}
 
-.fieldGroup:not(.groupedGroups .fieldGroup) {
-    margin-bottom: 24px;
+    &:not(.groupedGroups .fieldGroup) {
+        margin-bottom: 24px;
+    }
 }
 
 .groupedGroups {
@@ -22,15 +22,6 @@
     margin-bottom: 24px;
 }
 
-.field::-webkit-outer-spin-button,
-.field::-webkit-inner-spin-button {
-    display: none;
-    -webkit-appearance: none;
-    margin: 0;
-}
-.field[type=number] {
-    appearance: textfield;
-}
 .field {
     line-height: inherit;
 
@@ -41,20 +32,32 @@
 
     background: transparent;
 
-    transition: var(--transition);
-}
-.field::placeholder {
-    color: var(--opacity-neutral-darkest-60);
-}
-.field:focus {
-    border-color: var(--color-scheme-1-accent);
-}
-.field:focus::placeholder {
-    color: transparent;
-}
-.field:has(+ .error) {
-    color: var(--color-red);
-    border-color: var(--color-red);
+    transition: color var(--transition),
+                border-color var(--transition);
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        display: none;
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    &[type=number] {
+        appearance: textfield;
+    }
+    &::placeholder {
+        color: var(--opacity-neutral-darkest-60);
+    }
+    &:focus {
+        border-color: var(--color-scheme-1-accent);
+
+        &::placeholder {
+            color: transparent;
+        }
+    }
+    &:has(+ .error) {
+        color: var(--color-red);
+        border-color: var(--color-red);
+    }
 }
 
 .error {
@@ -74,15 +77,40 @@
 
     background: var(--color-deco);
 
-    transition: var(--transition);
+    transition: border-color var(--transition),
+                color var(--transition),
+                background-color var(--transition);
+    
+    &:hover,
+    &:focus {
+        border-color: var(--color-deco-darker);
+        background: var(--color-deco-dark);
+    }
+    &:active {
+        border-color: var(--color-deco);
+        color: var(--color-white);
+        background-color: var(--color-deco-darkest);
+    }
 }
-.button:hover,
-.button:focus {
-    border-color: var(--color-deco-darker);
-    background: var(--color-deco-dark);
-}
-.button:active {
-    border-color: var(--color-deco);
-    color: var(--color-white);
-    background-color: var(--color-deco-darkest);
+
+@media screen and (min-width: 768px) {
+    .groupedGroups {
+        flex-direction: row;
+        column-gap: 32px;
+
+        & > .fieldGroup {
+            width: 100%;
+        }
+    }
+
+    .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        margin-left: auto;
+        margin-right: auto;
+        padding: 6px 12px;
+        width: auto;
+    }
 }

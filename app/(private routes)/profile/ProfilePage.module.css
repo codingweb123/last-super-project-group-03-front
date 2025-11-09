@@ -15,6 +15,10 @@
     margin-bottom: 48px;
 }
 
+.cabinetContainer {
+    margin-bottom: 48px;
+}
+
 .h2 {
     font-size: 20px;
     line-height: 140%;
@@ -30,19 +34,18 @@
     margin-bottom: 32px;
 }
 
-.ordersContainer {
-    margin-bottom: 48px;
+.orders {
+    display: flex;
+    justify-content: space-between;
 }
 
 .order {
     line-height: 150%;
     color: var(--color-scheme-1-text);
 
-    display: flex;
-    justify-content: space-between;
-}
-.order:not(:last-child) {
-    margin-bottom: 16px;
+    &:not(:last-child) {
+        margin-bottom: 16px;
+    }
 }
 
 .date {
@@ -68,21 +71,78 @@ p:has(+ .status) {
 
     background-color: var(--opacity-neutral-darkest-5);
 
-    transition: var(--transition);
-}
-.logout:hover,
-.logout:focus {
-    border-color: var(--opacity-neutral-darkest-50);
-    background: var(--opacity-neutral-darkest-15);
-}
-.logout:active {
-    border-color: var(--opacity-transparent);
-    color: var(--color-white);
-    background-color: var(--opacity-neutral-darkest-50);
+    transition: border-color var(--transition),
+                color var(--transition),
+                background-color var(--transition);
+
+    &:hover,
+    &:focus {
+        border-color: var(--opacity-neutral-darkest-50);
+        background: var(--opacity-neutral-darkest-15);
+    }
+    &:active {
+        border-color: var(--opacity-transparent);
+        color: var(--color-white);
+        background-color: var(--opacity-neutral-darkest-50);
+    }
 }
 
 @media screen and (max-width: 767px) {
     .statusGroup {
         display: none;
+    }
+}
+@media screen and (min-width: 768px) {
+    .orders {
+        justify-content: flex-start;
+        column-gap: 16px;
+
+        & ul:first-child {
+            width: 250px;
+        }
+        & ul:nth-child(2) {
+            width: 200px;
+        }
+    }
+
+    .logout {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        margin-left: auto;
+        margin-right: auto;
+        padding: 6px 12px;
+        width: auto;
+    }
+}
+
+@media screen and (min-width: 1440px) {
+    .h1 {
+        font-size: 48px;
+
+        margin-top: 112px;
+    }
+
+    .cabinetContainer {
+        display: flex;
+        flex-direction: row-reverse;
+        column-gap: 32px;
+
+        & > div {
+            width: 100%;
+        }
+    }
+
+    .h2 {
+        font-size: 24px;
+    }
+
+    .infoContainer {
+        margin: 0;
+    }
+
+    .logout {
+        margin-bottom: 80px;
     }
 }

@@ -62,18 +62,19 @@ export default function UserInfoForm() {
 	};
 
 	const formatToPhone = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-		const digits = (event.target as HTMLInputElement).value.replace(/\D/g, "").substring(0, 12);
+		const target = event.target as HTMLInputElement;
+		const digits = target.value.replace(/\D/g, "").substring(0, 12);
 		const firstPartOfNumber = digits.substring(0, 2);
 		const secondPartOfNumber = digits.substring(2, 5);
 		const thirdPartOfNumber = digits.substring(5, 8);
 		const fourthPartOfNumber = digits.substring(8, 10);
 		const fifthPartOfNumber = digits.substring(10, 12);
 
-		if (digits.length > 10) (event.target as HTMLInputElement).value = `+${firstPartOfNumber} (${secondPartOfNumber}) ${thirdPartOfNumber}-${fourthPartOfNumber}-${fifthPartOfNumber}`;
-		else if (digits.length > 8) (event.target as HTMLInputElement).value = `+${firstPartOfNumber} (${secondPartOfNumber}) ${thirdPartOfNumber}-${fourthPartOfNumber}`;
-		else if (digits.length > 5) (event.target as HTMLInputElement).value = `+${firstPartOfNumber} (${secondPartOfNumber}) ${thirdPartOfNumber}`;
-		else if (digits.length > 2) (event.target as HTMLInputElement).value = `+${firstPartOfNumber} (${secondPartOfNumber}`;
-		else if (digits.length > 0) (event.target as HTMLInputElement).value = `+${firstPartOfNumber}`;
+		if (digits.length > 10) target.value = `+${firstPartOfNumber} (${secondPartOfNumber}) ${thirdPartOfNumber}-${fourthPartOfNumber}-${fifthPartOfNumber}`;
+		else if (digits.length > 8) target.value = `+${firstPartOfNumber} (${secondPartOfNumber}) ${thirdPartOfNumber}-${fourthPartOfNumber}`;
+		else if (digits.length > 5) target.value = `+${firstPartOfNumber} (${secondPartOfNumber}) ${thirdPartOfNumber}`;
+		else if (digits.length > 2) target.value = `+${firstPartOfNumber} (${secondPartOfNumber}`;
+		else if (digits.length > 0) target.value = `+${firstPartOfNumber}`;
 	};
 
 	const handleSubmit = (): void => { };

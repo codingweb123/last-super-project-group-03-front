@@ -19,7 +19,7 @@ export default function ProfileClient({ ordersList }: ProfileClientProps) {
     return (
         <div className="container">
             <h1 className={css.h1}>Кабінет</h1>
-            <div>
+            <div className={css.cabinetContainer}>
                 <div className={css.infoContainer}>
                     <h2 className={css.h2}>Особиста інформація</h2>
                     <UserInfoForm/>
@@ -27,41 +27,48 @@ export default function ProfileClient({ ordersList }: ProfileClientProps) {
                 <div className={css.ordersContainer}>
                     <h2 className={`${css.h2} ${css.ordersTitle}`}>Мої замовлення</h2>
                     {
-                        ordersList.length
+                        0
                             ?
-                            <ul>
-                                {ordersList.map(({ date, orderNum, sum, status }) => {
-                                    let ukrStatus: "У процесі" | "Комплектується" | "Виконано" | "Скасовано";
-                                    switch (status) {
-                                        case "processing":
-                                            ukrStatus = "У процесі";
-                                            break;
-                                        case "packing":
-                                            ukrStatus = "Комплектується";
-                                            break;
-                                        case "success":
-                                            ukrStatus = "Виконано";
-                                            break;
-                                        default:
-                                            ukrStatus = "Скасовано";
-                                    }
-
-                                    return <li className={css.order} key={orderNum}>
-                                                <div>
-                                                    <p className={css.date}>{date}</p>
-                                                    <p className={css.orderNum}>№{orderNum}</p>
-                                                </div>
-                                                <div>
-                                                    <p>Сума:</p>
-                                                    <p className={css.sum}>{sum} грн</p>
-                                                </div>
-                                                <div className={css.statusGroup}>
-                                                    <p>Статус:</p>
-                                                    <p className={css.status}>{ukrStatus}</p>
-                                                </div>
-                                            </li>
-                                })}
-                            </ul>
+                            <div className={css.orders}>
+                                <ul>
+                                    {ordersList.map(({date, orderNum}) => 
+                                        <li className={css.order} key={orderNum}>
+                                            <p className={css.date}>{date}</p>
+                                            <p className={css.orderNum}>№{orderNum}</p>
+                                        </li>
+                                    )}
+                                </ul>
+                                <ul>
+                                    {ordersList.map(({orderNum, sum}) =>
+                                        <li className={css.order} key={orderNum}>
+                                            <p>Сума:</p>
+                                            <p className={css.sum}>{sum} грн</p>
+                                        </li>
+                                    )}
+                                </ul>
+                                <ul className={css.statusGroup}>
+                                    {ordersList.map(({orderNum, status }) => {
+                                        let ukrStatus: "У процесі" | "Комплектується" | "Виконано" | "Скасовано";
+                                        switch (status) {
+                                            case "processing":
+                                                ukrStatus = "У процесі";
+                                                break;
+                                            case "packing":
+                                                ukrStatus = "Комплектується";
+                                                break;
+                                            case "success":
+                                                ukrStatus = "Виконано";
+                                                break;
+                                            default:
+                                                ukrStatus = "Скасовано";
+                                        }
+                                            return  <li className={css.order} key={orderNum}>
+                                                        <p>Статус:</p>
+                                                        <p className={css.status}>{ukrStatus}</p>
+                                                    </li>
+                                    })}
+                                </ul>
+                            </div>
                             :
                             <MessageNoInfo text="У вас ще не було жодних замовлень! Мершій до покупок!" buttonText="До покупок" onClick={() => router.push("/goods")} />
                     }
