@@ -5,16 +5,17 @@ import css from "./ProfilePage.module.css";
 import { useRouter } from "next/navigation";
 
 import MessageNoInfo from "@/components/MessageNoInfo/MessageNoInfo";
-
 import UserInfoForm from "@/components/UserInfoForm/UserInfoForm";
 
-import { OrdersList } from "./page";
+import { Routes } from "@/config/config";
 
-interface ProfileClientProps {
-    ordersList: OrdersList[]
+import { Order } from "@/types/order";
+
+interface Props {
+    ordersList: Order[]
 }
 
-export default function ProfileClient({ ordersList }: ProfileClientProps) {
+export default function ProfileClient({ ordersList }: Props) {
     const router = useRouter();
     return (
         <div className="container">
@@ -70,7 +71,7 @@ export default function ProfileClient({ ordersList }: ProfileClientProps) {
                                 </ul>
                             </div>
                             :
-                            <MessageNoInfo text="У вас ще не було жодних замовлень! Мершій до покупок!" buttonText="До покупок" onClick={() => router.push("/goods")} />
+                            <MessageNoInfo text="У вас ще не було жодних замовлень! Мершій до покупок!" buttonText="До покупок" onClick={() => router.push(Routes.Goods)} />
                     }
                 </div>
             </div>

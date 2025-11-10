@@ -2,18 +2,22 @@
 
 import { useId } from 'react';
 
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 
 import * as Yup from "yup";
 
 import css from "./UserInfoForm.module.css";
 
-const initialValues = {
-	fistName: "",
-	surname: "",
+import { editMe } from '@/lib/api/clientApi';
+
+import { OrderUserData } from '@/types/user';
+
+const initialValues: OrderUserData = {
+	firstName: "",
+	lastName: "",
 	phone: "",
 	city: "",
-	postOffice: ""
+	postalOffice: 1
 };
 
 Yup.setLocale({
@@ -27,12 +31,12 @@ Yup.setLocale({
 });
 
 const validationSchema = Yup.object().shape({
-	fistName: Yup.string()
+	firstName: Yup.string()
 		.trim()
 		.min(2)
 		.max(32)
 		.required(),
-	surname: Yup.string()
+	lastName: Yup.string()
 		.trim()
 		.min(2)
 		.max(32)
@@ -40,13 +44,13 @@ const validationSchema = Yup.object().shape({
 	phone: Yup.string()
 		.trim()
 		.max(19)
-		.matches(/\+38 \(0\d{2}\) \d{3}-\d{2}-\d{2}/, "Номер телефону не валідний формату +38 (0__) ___-__-__.")
+		.matches(/\+38 \(0\d{2}\) \d{3}-\d{2}-\d{2}/, "Номер телефону не валідний формату «+38 (0__) ___-__-__».")
 		.required(),
 	city: Yup.string()
 		.trim()
 		.required(),
-	postOffice: Yup.number()
-		.min(1, "Мінімум одна не негативна цифра.")
+	postalOffice: Yup.number()
+		.min(1, "Мінімум одна не негативна цифра та не нуль.")
 		.required()
 });
 
@@ -77,7 +81,17 @@ export default function UserInfoForm() {
 		else if (digits.length > 0) target.value = `+${firstPartOfNumber}`;
 	};
 
-	const handleSubmit = (): void => { };
+	const handleSubmit = async (values: OrderUserData, actions: FormikHelpers<OrderUserData>): Promise<void> => {
+		// Parses phone.
+		values.phone =
+			values.phone
+				.replace(" (", "")
+				.replace(") ", "")
+				.replace(/-/g, "");
+		
+		await editMe(values);
+		actions.resetForm();
+	};
 
 	return (
 		<Formik
@@ -88,14 +102,14 @@ export default function UserInfoForm() {
 			<Form className={css.form}>
 				<div className={css.groupedGroups}>
 					<div className={css.fieldGroup}>
-						<label htmlFor={`${formId}-fistName`}>Імʼя*</label>
-						<Field className={css.field} id={`${formId}-fistName`} type="text" name="fistName" placeholder="Ваше імʼя" minLength="2" maxLength="32"/>
-						<ErrorMessage className={css.error} name="fistName" component="p"/>
+						<label htmlFor={`${formId}-firstName`}>Імʼя*</label>
+						<Field className={css.field} id={`${formId}-firstName`} type="text" name="firstName" placeholder="Ваше імʼя" minLength="2" maxLength="32"/>
+						<ErrorMessage className={css.error} name="firstName" component="p"/>
 					</div>
 					<div className={css.fieldGroup}>
-						<label htmlFor={`${formId}-surname`}>Прізвище*</label>
-						<Field className={css.field} id={`${formId}-surname`} type="text" name="surname" placeholder="Ваше прізвище" minLength="2" maxLength="32"/>
-						<ErrorMessage className={css.error} name="surname" component="p"/>
+						<label htmlFor={`${formId}-lastName`}>Прізвище*</label>
+						<Field className={css.field} id={`${formId}-lastName`} type="text" name="lastName" placeholder="Ваше прізвище" minLength="2" maxLength="32"/>
+						<ErrorMessage className={css.error} name="lastName" component="p"/>
 					</div>
 				</div>
 
@@ -112,9 +126,9 @@ export default function UserInfoForm() {
 						<ErrorMessage className={css.error} name="city" component="p"/>
 					</div>
 					<div className={css.fieldGroup}>
-						<label htmlFor={`${formId}-postOffice`}>Номер відділення Нової Пошти*</label>
-						<Field className={css.field} id={`${formId}-postOffice`} type="number" name="postOffice" placeholder="1" min="1" onKeyDown={disallowNonNumericInput} />
-						<ErrorMessage className={css.error} name="postOffice" component="p"/>
+						<label htmlFor={`${formId}-postalOffice`}>Номер відділення Нової Пошти*</label>
+						<Field className={css.field} id={`${formId}-postalOffice`} type="number" name="postalOffice" placeholder="1" min="1" onKeyDown={disallowNonNumericInput} />
+						<ErrorMessage className={css.error} name="postalOffice" component="p"/>
 					</div>
 				</div>
 				<button className={css.button} type="submit">Зберегти зміни</button>

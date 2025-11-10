@@ -1,5 +1,6 @@
 import { cookies } from "next/headers"
 import { nextServer } from "./api"
+import { Order } from "@/types/order"
 import { User } from "@/types/user"
 
 export const checkServerSession = async () => {
@@ -21,3 +22,13 @@ export const getServerMe = async () => {
 	})
 	return data
 }
+
+export const getServerOrders = async () => {
+	const cookieStore = await cookies();
+	const { data } = await nextServer.get<Order[]>("/orders", {
+		headers: {
+			Cookie: cookieStore.toString()
+		}
+	});
+	return data;
+};

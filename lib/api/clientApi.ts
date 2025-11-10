@@ -1,22 +1,10 @@
-import { User } from "@/types/user"
-import { nextServer } from "./api"
-import { Cloth } from "@/types/shop"
+import { nextServer } from "./api";
+import { LoginRequest, RegisterRequest } from "@/types/auth";
+import { Categories } from "@/types/category";
+import { FeedbackRequest } from "@/types/feedback";
+import { Cloth } from "@/types/shop";
+import { OrderUserData, User } from "@/types/user";
 
-type RegisterRequest = User & { password: string }
-type LoginRequest = Omit<RegisterRequest, "name">
-type Review = {
-	name: string
-	text: string
-	rate: number
-}
-type Order = {
-	name: string
-	surname: string
-	phone: string
-	city: string
-	postCode: string
-	comment: string
-}
 type GetGoods = Partial<{
 	category: string
 	sizes: string
@@ -50,18 +38,13 @@ export async function getGoods({
 	return data
 }
 
-export async function createOrder(orderData: Order) {
-	const { data } = await nextServer.post("/user/me/order", orderData)
-	return data
-}
-
 export async function getSingleGood(id: string) {
 	const { data } = await nextServer.get<Cloth>(`/goods/${id}`)
 	return data
 }
 
 export async function getCategories() {
-	const { data } = await nextServer.get("/categories")
+	const { data } = await nextServer.get<Categories>("/categories")
 	return data
 }
 
@@ -85,12 +68,12 @@ export async function getMe() {
 	return data
 }
 
-export async function editMe(userData: User) {
+export async function editMe(userData: OrderUserData) {
 	const { data } = await nextServer.patch<User>("/users/me", userData)
 	return data
 }
 
-export async function createGoodReview(id: string, reviewData: Review) {
+export async function createGoodReview(id: string, reviewData: FeedbackRequest) {
 	const { data } = await nextServer.patch(`/goods/${id}/review`, reviewData)
 	return data
 }
