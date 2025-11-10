@@ -9,36 +9,26 @@ import "swiper/css";
 import css from "./ReviewsList.module.css";
 import type { Swiper as SwiperInstance } from "swiper";
 
-type ApiFeedback = {
-  _id: string;
-  author: string;
-  date: string;
-  description: string;
-  rate: number;
-  goodId: string | { _id: string; name?: string };
-  createdAt?: string;
-  updatedAt?: string;
-};
-
-type ApiResponse = {
-  page: number;
-  perPage: number;
-  totalFeedbacks: number;
-  totalPages: number;
-  feedbacks: ApiFeedback[];
-};
-
-type Feedback = {
+interface ApiFeedback {
   _id: string;
   author: string;
   date: string;
   description: string;
   rate: number;
   goodId: string;
-  goodName: string;
   createdAt?: string;
   updatedAt?: string;
-};
+}
+
+interface ApiResponse<T> {
+  page: number;
+  perPage: number;
+  totalFeedbacks: number;
+  totalPages: number;
+  feedbacks: T[];
+}
+
+type Feedback = ApiFeedback;
 
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ??
@@ -46,60 +36,40 @@ const API_BASE =
 const ENDPOINT = `${API_BASE}/api/feedbacks`;
 const PER_PAGE = 6;
 
-function normalizeFeedback(item: ApiFeedback): Feedback {
-  if (typeof item.goodId === "string") {
-    return {
-      _id: item._id,
-      author: item.author,
-      date: item.date,
-      description: item.description,
-      rate: Number(item.rate) || 0,
-      goodId: item.goodId,
-      goodName: item.goodId,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-    };
-  }
-  const g = item.goodId || ({} as any);
-  const gid = String(g._id ?? "");
-  const gname = String(g.name ?? (gid || "товар"));
-  return {
-    _id: item._id,
-    author: item.author,
-    date: item.date,
-    description: item.description,
-    rate: Number(item.rate) || 0,
-    goodId: gid,
-    goodName: gname,
-    createdAt: item.createdAt,
-    updatedAt: item.updatedAt,
-  };
-}
-
-async function fetchAllFeedbacks(): Promise<Feedback[]> {
-  const firstRes = await fetch(`${ENDPOINT}?page=1&perPage=${PER_PAGE}`, {
+async function fetchPage<T>(
+  page: number,
+  perPage = PER_PAGE
+): Promise<ApiResponse<T>> {
+  const res = await fetch(`${ENDPOINT}?page=${page}&perPage=${perPage}`, {
     cache: "no-store",
     headers: { Accept: "application/json" },
   });
-  if (!firstRes.ok) throw new Error(`HTTP ${firstRes.status}`);
-  const firstData: ApiResponse = await firstRes.json();
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
 
-  const totalPages = Math.max(1, Number(firstData.totalPages ?? 1));
-  const all: Feedback[] = (firstData.feedbacks ?? []).map(normalizeFeedback);
+async function fetchAllFeedbacks(): Promise<Feedback[]> {
+  const first = await fetchPage<ApiFeedback>(1);
 
-  for (let p = 2; p <= totalPages; p++) {
-    const res = await fetch(`${ENDPOINT}?page=${p}&perPage=${PER_PAGE}`, {
-      cache: "no-store",
-      headers: { Accept: "application/json" },
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data: ApiResponse = await res.json();
-    all.push(...(data.feedbacks ?? []).map(normalizeFeedback));
+  const totalPages = Math.max(1, Number(first.totalPages ?? 1));
+  const chunks = [first.feedbacks];
+
+  if (totalPages > 1) {
+    const promises: Promise<ApiResponse<ApiFeedback>>[] = [];
+    for (let p = 2; p <= totalPages; p++) {
+      promises.push(fetchPage<ApiFeedback>(p));
+    }
+    const rest = await Promise.all(promises);
+    for (const r of rest) chunks.push(r.feedbacks);
   }
 
-  const parseTime = (f: Feedback) =>
-    Date.parse(f.updatedAt || f.createdAt || f.date || "") || 0;
-  all.sort((a, b) => parseTime(b) - parseTime(a));
+  const all = chunks.flat();
+
+  all.sort((a, b) => {
+    const ta = Date.parse(a.updatedAt || a.createdAt || a.date || "") || 0;
+    const tb = Date.parse(b.updatedAt || b.createdAt || b.date || "") || 0;
+    return tb - ta;
+  });
 
   return all;
 }
@@ -138,7 +108,7 @@ function ReviewCard({ item }: { item: Feedback }) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          {item.goodName}
+          {item.goodId}
         </a>
       </div>
     </>
@@ -170,16 +140,13 @@ export default function ReviewsList() {
 
   const visibleReviews = feedbacks.slice(0, visibleCount);
 
-  const getSlidesPerView = (sw: SwiperInstance | null) => {
+  const slidesPerViewOf = (sw: SwiperInstance | null) => {
     if (!sw) return 1;
     const spv = sw.params.slidesPerView;
     return typeof spv === "number" ? spv : 1;
   };
-
-  const syncStepFromSwiper = (sw: SwiperInstance | null) => {
-    const s = getSlidesPerView(sw);
-    setStep(s);
-  };
+  const syncStepFrom = (sw: SwiperInstance | null) =>
+    setStep(slidesPerViewOf(sw));
 
   const canPrev = activeIndex > 0;
   const hasMoreWithinRendered = activeIndex + step < visibleCount;
@@ -198,23 +165,16 @@ export default function ReviewsList() {
     swiper.slideTo(target);
   }, [visibleCount, swiper, feedbacks.length]);
 
-  const handleSlideChange = (sw: SwiperInstance) => {
+  const handleSlideChange = (sw: SwiperInstance) =>
     setActiveIndex(sw.activeIndex);
-  };
-
-  const handlePrev = () => {
-    if (!swiper) return;
-    swiper.slideTo(Math.max(0, activeIndex - step));
-  };
-
+  const handlePrev = () => swiper?.slideTo(Math.max(0, activeIndex - step));
   const handleNext = () => {
     if (hasMoreWithinRendered && swiper) {
       swiper.slideTo(Math.min(visibleCount - 1, activeIndex + step));
       return;
     }
-    if (canAddMore) {
+    if (canAddMore)
       setVisibleCount((v) => Math.min(v + step, feedbacks.length));
-    }
   };
 
   if (isLoading) return <p className={css.text}>Завантаження...</p>;
@@ -227,10 +187,10 @@ export default function ReviewsList() {
         modules={[Keyboard, A11y]}
         onSwiper={(sw) => {
           setSwiper(sw);
-          syncStepFromSwiper(sw);
+          syncStepFrom(sw);
         }}
-        onBreakpoint={(sw) => syncStepFromSwiper(sw)}
-        onResize={(sw) => syncStepFromSwiper(sw)}
+        onBreakpoint={(sw) => syncStepFrom(sw)}
+        onResize={(sw) => syncStepFrom(sw)}
         onSlideChange={handleSlideChange}
         keyboard={{ enabled: true, onlyInViewport: true }}
         a11y={{ enabled: true }}
