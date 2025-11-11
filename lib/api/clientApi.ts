@@ -1,40 +1,102 @@
-import { nextServer } from "./api";
-import { LoginRequest, RegisterRequest } from "@/types/auth";
-import { Categories } from "@/types/category";
-import { FeedbackRequest } from "@/types/feedback";
-import { Cloth } from "@/types/shop";
-import { OrderUserData, User } from "@/types/user";
+import { User } from "@/types/user"
+import { nextServer } from "./api"
+import {
+	Category,
+	Cloth,
+	Feedback,
+	Order,
+	OrderUserData,
+	Status,
+} from "@/types/shop"
+
+export type RegisterRequest = Pick<User, "firstName" | "phone"> & {
+	password: string
+}
+export type LoginRequest = Omit<RegisterRequest, "firstName">
 
 type GetGoods = Partial<{
 	category: string
 	sizes: string
 	price: number
 	color: string
-	sex: string
+	gender: string
 	page: number
 	perPage: number
 }>
+
+type GetCategories = Partial<{
+	page: number
+	perPage: number
+}>
+
+type CategoriesResponse = Promise<
+	Paginated & {
+		totalCategories: number
+		categories: Category[]
+	}
+>
+
+type GetFeedbacks = Partial<{
+	page: number
+	perPage: number
+	goodId: string
+}>
+
+type FeedbacksResponse = Promise<
+	Paginated & {
+		totalFeedbacks: number
+		feedbacks: Feedback[]
+	}
+>
+
+type GoodsResponse = Promise<
+	Paginated & {
+		totalGoods: number
+		goods: Cloth[]
+	}
+>
+
+type Paginated = {
+	page: number
+	perPage: number
+	totalPages: number
+}
 
 export async function getGoods({
 	category,
 	sizes,
 	price,
 	color,
-	sex,
+	gender,
 	page,
 	perPage,
 }: GetGoods) {
-	const { data } = await nextServer.get<Cloth>(`/goods`, {
+	const { data } = await nextServer.get<GoodsResponse>(`/goods`, {
 		params: {
 			...(category && { category }),
 			...(sizes && { sizes }),
 			...(price && { price }),
 			...(color && { color }),
-			...(sex && { sex }),
+			...(gender && { gender }),
 			...(page && { page }),
 			...(perPage && { perPage }),
 		},
 	})
+	return data
+}
+
+export async function getOrders() {
+	const { data } = await nextServer.get("/orders")
+	return data
+}
+
+export async function createOrder(orderData: Order) {
+	const { data } = await nextServer.post("/orders", orderData)
+	return data
+}
+
+export async function patchOrder(orderId: string, status: Status) {
+	const { data } = await nextServer.patch("/orders", { status })
 	return data
 }
 
@@ -43,8 +105,24 @@ export async function getSingleGood(id: string) {
 	return data
 }
 
-export async function getCategories() {
-	const { data } = await nextServer.get<Categories>("/categories")
+export async function getCategories({ page, perPage }: GetCategories) {
+	const { data } = await nextServer.get<CategoriesResponse>("/categories", {
+		params: {
+			...(page && { page }),
+			...(perPage && { perPage }),
+		},
+	})
+	return data
+}
+
+export async function getFeedbacks({ page, perPage, goodId }: GetFeedbacks) {
+	const { data } = await nextServer.get<FeedbacksResponse>("/feedbacks", {
+		params: {
+			...(page && { page }),
+			...(perPage && { perPage }),
+			...(goodId && { goodId }),
+		},
+	})
 	return data
 }
 
@@ -64,7 +142,7 @@ export async function checkSession() {
 }
 
 export async function getMe() {
-	const { data } = await nextServer.get<User>("/users/me")
+	const { data } = await nextServer.get<User>("/auth/me")
 	return data
 }
 
@@ -73,8 +151,13 @@ export async function editMe(userData: OrderUserData) {
 	return data
 }
 
-export async function createGoodReview(id: string, reviewData: FeedbackRequest) {
+export async function createGoodReview(id: string, reviewData: Feedback) {
 	const { data } = await nextServer.patch(`/goods/${id}/review`, reviewData)
+	return data
+}
+
+export async function subscribe(email: string): Promise<{ message: string }> {
+	const { data } = await nextServer.post(`/subscriptions`, { email })
 	return data
 }
 

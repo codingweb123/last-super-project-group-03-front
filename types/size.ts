@@ -1,1 +1,0 @@
-export type Size = "XXS" | "XS" | "S" | "M" | "L" | "XL" | "XXL";

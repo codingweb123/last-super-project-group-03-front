@@ -9,7 +9,11 @@ import UserInfoForm from "@/components/UserInfoForm/UserInfoForm";
 
 import { Routes } from "@/config/config";
 
-import { Order } from "@/types/order";
+import { logout } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/stores/authStore";
+import { useBasketStore } from "@/lib/stores/basketStore";
+
+import { Order } from "@/types/shop";
 
 interface Props {
     ordersList: Order[]
@@ -17,6 +21,17 @@ interface Props {
 
 export default function ProfileClient({ ordersList }: Props) {
     const router = useRouter();
+    const clearIsAuthenticated = useAuthStore(state => state.clearIsAuthenticated);
+    const clearBasket = useBasketStore(state => state.clearBasket);
+
+    const handleLogout = async (): Promise<void> => {
+        await logout();
+        clearIsAuthenticated();
+        clearBasket();
+
+        router.push(Routes.Login);
+    };
+
     return (
         <div className="container">
             <h1 className={css.h1}>Кабінет</h1>
@@ -75,7 +90,7 @@ export default function ProfileClient({ ordersList }: Props) {
                     }
                 </div>
             </div>
-            <button className={css.logout} type="button">Вийти з кабінету</button>
+            <button className={css.logout} type="button" onClick={handleLogout}>Вийти з кабінету</button>
         </div>
     );
 }
