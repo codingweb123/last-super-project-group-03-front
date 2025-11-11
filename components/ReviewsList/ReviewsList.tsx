@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Keyboard, A11y } from "swiper/modules";
@@ -34,11 +34,12 @@ const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ??
   "https://last-super-project-group-03-back.onrender.com";
 const ENDPOINT = `${API_BASE}/api/feedbacks`;
-const PER_PAGE = 6;
+
+const PER_PAGE = 3;
 
 async function fetchPage<T>(
   page: number,
-  perPage = PER_PAGE
+  perPage: number = PER_PAGE
 ): Promise<ApiResponse<T>> {
   const res = await fetch(`${ENDPOINT}?page=${page}&perPage=${perPage}`, {
     cache: "no-store",
@@ -46,32 +47,6 @@ async function fetchPage<T>(
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
-}
-
-async function fetchAllFeedbacks(): Promise<Feedback[]> {
-  const first = await fetchPage<ApiFeedback>(1);
-
-  const totalPages = Math.max(1, Number(first.totalPages ?? 1));
-  const chunks = [first.feedbacks];
-
-  if (totalPages > 1) {
-    const promises: Promise<ApiResponse<ApiFeedback>>[] = [];
-    for (let p = 2; p <= totalPages; p++) {
-      promises.push(fetchPage<ApiFeedback>(p));
-    }
-    const rest = await Promise.all(promises);
-    for (const r of rest) chunks.push(r.feedbacks);
-  }
-
-  const all = chunks.flat();
-
-  all.sort((a, b) => {
-    const ta = Date.parse(a.updatedAt || a.createdAt || a.date || "") || 0;
-    const tb = Date.parse(b.updatedAt || b.createdAt || b.date || "") || 0;
-    return tb - ta;
-  });
-
-  return all;
 }
 
 function StarRating({ value = 0, max = 5 }: { value?: number; max?: number }) {
@@ -116,10 +91,18 @@ function ReviewCard({ item }: { item: Feedback }) {
 }
 
 export default function ReviewsList() {
-  const { data, isLoading, isError, error, isSuccess } = useQuery({
-    queryKey: ["feedbacks", "all"],
-    queryFn: fetchAllFeedbacks,
+  const {
+    data: firstPage,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["feedbacks", "page-1", PER_PAGE],
+    queryFn: () => fetchPage<ApiFeedback>(1, PER_PAGE),
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 1,
   });
 
   useEffect(() => {
@@ -131,14 +114,23 @@ export default function ReviewsList() {
       toast.error("Помилка завантаження відгуків ❌", { id: "feedbacks" });
   }, [isLoading, isError, isSuccess]);
 
-  const feedbacks = data ?? [];
+  const [pages, setPages] = useState<Feedback[][]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
 
-  const [visibleCount, setVisibleCount] = useState(3);
+  useEffect(() => {
+    if (!firstPage) return;
+    setPages([[...firstPage.feedbacks]]);
+    setPage(1);
+    setTotalPages(firstPage.totalPages ?? 1);
+  }, [firstPage]);
+
   const [swiper, setSwiper] = useState<SwiperInstance | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [step, setStep] = useState(1);
 
-  const visibleReviews = feedbacks.slice(0, visibleCount);
+  const visibleReviews = pages.flat();
 
   const slidesPerViewOf = (sw: SwiperInstance | null) => {
     if (!sw) return 1;
@@ -149,35 +141,48 @@ export default function ReviewsList() {
     setStep(slidesPerViewOf(sw));
 
   const canPrev = activeIndex > 0;
-  const hasMoreWithinRendered = activeIndex + step < visibleCount;
-  const canAddMore = visibleCount < feedbacks.length;
-
-  useEffect(() => {
-    setVisibleCount((v) => Math.max(step, v));
-  }, [step]);
-
-  useEffect(() => {
-    if (!swiper) return;
-    const target = Math.max(
-      0,
-      Math.min(visibleCount - 1, feedbacks.length - 1)
-    );
-    swiper.slideTo(target);
-  }, [visibleCount, swiper, feedbacks.length]);
+  const hasMoreWithinLoaded = activeIndex + step < visibleReviews.length;
+  const hasMorePages = page < totalPages;
+  const disableNext = !(hasMoreWithinLoaded || hasMorePages) || isFetchingMore;
 
   const handleSlideChange = (sw: SwiperInstance) =>
     setActiveIndex(sw.activeIndex);
-  const handlePrev = () => swiper?.slideTo(Math.max(0, activeIndex - step));
-  const handleNext = () => {
-    if (hasMoreWithinRendered && swiper) {
-      swiper.slideTo(Math.min(visibleCount - 1, activeIndex + step));
-      return;
-    }
-    if (canAddMore)
-      setVisibleCount((v) => Math.min(v + step, feedbacks.length));
+
+  const handlePrev = () => {
+    if (!swiper) return;
+    swiper.slideTo(Math.max(0, activeIndex - step));
   };
 
-  if (isLoading) return <p className={css.text}>Завантаження...</p>;
+  const handleNext = async () => {
+    if (!swiper) return;
+
+    if (hasMoreWithinLoaded) {
+      swiper.slideTo(Math.min(visibleReviews.length - 1, activeIndex + step));
+      return;
+    }
+
+    if (hasMorePages && !isFetchingMore) {
+      try {
+        setIsFetchingMore(true);
+        const next = page + 1;
+        const resp = await fetchPage<ApiFeedback>(next, PER_PAGE);
+
+        setPages((prev) => [...prev, resp.feedbacks]);
+        setPage(next);
+        setTotalPages(resp.totalPages ?? next);
+
+        const oldCount = visibleReviews.length;
+        setTimeout(() => swiper.slideTo(oldCount), 0);
+      } catch {
+        toast.error("Не вдалося завантажити ще відгуки");
+      } finally {
+        setIsFetchingMore(false);
+      }
+    }
+  };
+
+  if (isLoading || !firstPage)
+    return <p className={css.text}>Завантаження...</p>;
   if (isError)
     return <p className={css.text}>Помилка: {(error as Error)?.message}</p>;
 
@@ -226,10 +231,10 @@ export default function ReviewsList() {
 
         <button
           type="button"
-          className={`${css.btnNext} ${!(hasMoreWithinRendered || canAddMore) ? css.btnDisabled : ""}`}
+          className={`${css.btnNext} ${disableNext ? css.btnDisabled : ""}`}
           aria-label="Наступні"
           onClick={handleNext}
-          disabled={!(hasMoreWithinRendered || canAddMore)}
+          disabled={disableNext}
         >
           <svg className={`${css.arrow} ${css.arrowRight}`} aria-hidden="true">
             <use href="/icons.svg#i-arrow" />
