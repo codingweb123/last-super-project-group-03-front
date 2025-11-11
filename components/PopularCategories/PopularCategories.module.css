@@ -1,0 +1,52 @@
+.popularCategories{
+max-width: 1312px;
+margin: 0 auto;
+
+}
+.sectionTitle{
+font-family: "Nunito Sans", sans-serif;
+font-weight: 400;
+font-size: 48px;
+line-height: 120%;
+letter-spacing: -0.01em;
+}
+.containerHeader{
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 24px;
+}
+.buttonAllCat{
+background-color: #0000000D;
+width: 122px;
+height: 36px;
+padding: 6px 12px;
+border-radius: 100px;
+cursor: pointer;
+}
+
+@media (min-width: 768px) and (max-width: 1439.98px) {
+    .popularCategories {
+        max-width: 704px;
+    }
+
+    .sectionTitle {
+        font-size: 36px;
+    }
+     .containerHeader {
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 767px) {
+    .popularCategories {
+        max-width: 335px;
+    }
+        .sectionTitle {
+            font-size: 34px;
+        }
+        .link{
+            padding-top: 30px;
+        }
+   
+}
