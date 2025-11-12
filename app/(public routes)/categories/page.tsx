@@ -6,7 +6,7 @@ export default function CategoriesPage() {
 		<section className={css.pageCategories}>
 			<div className={css.container}>
 		<h1 className={css.title}>Категорії</h1>
-		<CategoriesList variant="list" showMoreButton/>
+		<CategoriesList/>
 	</div>
 		</section>
 		)
