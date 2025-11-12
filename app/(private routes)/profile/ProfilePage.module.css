@@ -60,6 +60,8 @@ p:has(+ .status) {
 }
 
 .logout {
+    cursor: pointer;
+
     font-weight: 500;
     line-height: 150%;
     
