@@ -4,6 +4,8 @@ import css from "./ProfilePage.module.css";
 
 import { useRouter } from "next/navigation";
 
+import toast from "react-hot-toast";
+
 import MessageNoInfo from "@/components/MessageNoInfo/MessageNoInfo";
 import UserInfoForm from "@/components/UserInfoForm/UserInfoForm";
 
@@ -25,11 +27,20 @@ export default function ProfileClient({ ordersList }: Props) {
     const clearBasket = useBasketStore(state => state.clearBasket);
 
     const handleLogout = async (): Promise<void> => {
-        await logout();
-        clearIsAuthenticated();
-        clearBasket();
-
-        router.push(Routes.Login);
+        try {
+            // Requests post on /auth/logout.
+            await logout();
+            // Clears user global state.
+            clearIsAuthenticated();
+            // Clears basket global state.
+            clearBasket();
+            // Notifies about successful logging out.
+            toast.success("Успішний вихід із профіля!");
+            router.push(Routes.Login);
+        } catch {
+            // Notifies about that something went wrong.
+            toast.error("Щось пішло не так під час виходу з профіля...");
+        }
     };
 
     return (
