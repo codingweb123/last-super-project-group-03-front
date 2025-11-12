@@ -7,14 +7,14 @@ import { useRouter } from "next/router";
 
 export default function RegisterPage() {
   return (
-    <div className={css.container_register}>
+    <div className="container">
       <nav>
         <ul>
           <li>
-            <Link href="/auth/login">Вхід</Link>
+            <Link href="/login">Вхід</Link>
           </li>
           <li>
-            <Link href="/auth/register">Реєстрація</Link>
+            <Link href="/register">Реєстрація</Link>
           </li>
         </ul>
       </nav>
