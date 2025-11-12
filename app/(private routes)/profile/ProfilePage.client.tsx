@@ -4,18 +4,45 @@ import css from "./ProfilePage.module.css";
 
 import { useRouter } from "next/navigation";
 
-import MessageNoInfo from "@/components/MessageNoInfo/MessageNoInfo";
+import toast from "react-hot-toast";
 
+import MessageNoInfo from "@/components/MessageNoInfo/MessageNoInfo";
 import UserInfoForm from "@/components/UserInfoForm/UserInfoForm";
 
-import { OrdersList } from "./page";
+import { Routes } from "@/config/config";
 
-interface ProfileClientProps {
-    ordersList: OrdersList[]
+import { logout } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/stores/authStore";
+import { useBasketStore } from "@/lib/stores/basketStore";
+
+import { Order } from "@/types/shop";
+
+interface Props {
+    ordersList: Order[]
 }
 
-export default function ProfileClient({ ordersList }: ProfileClientProps) {
+export default function ProfileClient({ ordersList }: Props) {
     const router = useRouter();
+    const clearIsAuthenticated = useAuthStore(state => state.clearIsAuthenticated);
+    const clearBasket = useBasketStore(state => state.clearBasket);
+
+    const handleLogout = async (): Promise<void> => {
+        try {
+            // Requests post on /auth/logout.
+            await logout();
+            // Clears user global state.
+            clearIsAuthenticated();
+            // Clears basket global state.
+            clearBasket();
+            // Notifies about successful logging out.
+            toast.success("Успішний вихід із профіля!");
+            router.push(Routes.Login);
+        } catch {
+            // Notifies about that something went wrong.
+            toast.error("Щось пішло не так під час виходу з профіля...");
+        }
+    };
+
     return (
         <div className="container">
             <h1 className={css.h1}>Кабінет</h1>
@@ -70,11 +97,11 @@ export default function ProfileClient({ ordersList }: ProfileClientProps) {
                                 </ul>
                             </div>
                             :
-                            <MessageNoInfo text="У вас ще не було жодних замовлень! Мершій до покупок!" buttonText="До покупок" onClick={() => router.push("/goods")} />
+                            <MessageNoInfo text="У вас ще не було жодних замовлень! Мершій до покупок!" buttonText="До покупок" onClick={() => router.push(Routes.Goods)} />
                     }
                 </div>
             </div>
-            <button className={css.logout} type="button">Вийти з кабінету</button>
+            <button className={css.logout} type="button" onClick={handleLogout}>Вийти з кабінету</button>
         </div>
     );
 }

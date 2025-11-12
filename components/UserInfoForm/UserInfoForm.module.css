@@ -66,6 +66,8 @@
 }
 
 .button {
+    cursor: pointer;
+
     font-weight: 500;
     line-height: inherit;
     color: var(--color-neutral-darkest);

@@ -1,38 +1,84 @@
 "use client";
 
-import "swiper/css";
-import "swiper/css/navigation";
-//import "./styles.css";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import css from "./PopularCategories.module.css";
 import { useState, useEffect } from "react";
-import CategoryCard from "../CategoryCard/CategoryCard";
 import { getCategories } from "@/lib/api/clientApi";
-import { CategoriesResponse, Category } from "@/types/shop";
+import { Category } from "@/types/shop";
+import CategoriesList from "../CategoriesList/CategoriesList";
+import { useQuery } from "@tanstack/react-query";
 
 export default function PopularCategoriesClient() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(2);
+  const [isNewPortion, setIsNewPortion] = useState<boolean>(true);
+
+  const { data } = useQuery({
+    queryKey: ["popularCategories", { page }],
+    queryFn: () => getCategories({ page }),
+    staleTime: 15 * 60 * 1000,
+    refetchOnMount: false,
+    enabled: isNewPortion,
+  });
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const res: CategoriesResponse = await getCategories({ page: 1 });
-      setCategories(res.categories);
+    const setNewCategories = () => {
+      if (data && isNewPortion) {
+        setTotalPages(data.totalPages);
+        setIsNewPortion(false);
+        if (page === 1) {
+          setCategories(data.categories);
+        } else {
+          setCategories((prev) => [...prev, ...data.categories]);
+        }
+      }
     };
-    fetchCategories();
-  }, []);
+    setNewCategories();
+  }, [data, page, isNewPortion]);
 
-  if (!categories.length) {
-    return null;
-  }
+  const loadMore = () => {
+    if (page >= totalPages) {
+      return;
+    }
+    setPage(page + 1);
+    setIsNewPortion(true);
+  };
 
   return (
-    <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
-      {categories.map((cat) => (
-        <SwiperSlide key={cat._id}>
-          <CategoryCard category={cat} />
-        </SwiperSlide>
-      ))}
-      <ul></ul>
-    </Swiper>
+    categories && (
+      <>
+        <CategoriesList
+          isSwiper={true}
+          categories={categories}
+          btnLeft={css.btnLeft}
+          btnRight={css.btnRight}
+        />
+        <ul>
+          <li className={css.listBtn}>
+            <button
+              type="button"
+              className={`${css.button} ${css.btnLeft}`}
+              aria-label="Navigate previous slide"
+            >
+              <svg className={css.icons} width={24} height={24}>
+                <use href="/icons.svg#i-arrow"></use>
+              </svg>
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              className={`${css.button} ${css.btnRight}`}
+              onClick={loadMore}
+              aria-label="Navigate next slide"
+            >
+              <svg className={css.icons} width={24} height={24}>
+                <use href="/icons.svg#i-arrow"></use>
+              </svg>
+            </button>
+          </li>
+        </ul>
+      </>
+    )
   );
 }
