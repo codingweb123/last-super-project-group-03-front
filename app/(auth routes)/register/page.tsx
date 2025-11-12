@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 
 export default function RegisterPage() {
   return (
-    <div className="container">
+    <div className={css.container_register}>
       <nav>
         <ul>
           <li>
