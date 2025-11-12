@@ -1,22 +1,3 @@
-.section {
-  padding: 64px 20px;
-}
-
-.container {
-  max-width: 375px;
-  margin: 0 auto;
-}
-
-.hero_text,
-.link_first,
-.link_second {
-  font-family: var(--font-inter);
-}
-
-.hero_content {
-  width: 335px;
-}
-
 .hero_title {
   font-family: var(--font-nunito-sans);
   font-size: 40px;
@@ -40,15 +21,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 6px, 12px;
-
+  padding: 6px, 124px;
   width: 100%;
-  min-width: 320px;
-  max-width: 335px;
   border-radius: 100px;
   height: 36px;
-  text-decoration: none;
-  transition: all 250ms ease-in-out;
+  transition:
+    border-color 250ms ease-in-out,
+    background-color 250ms ease-in-out;
 }
 
 .link_first {
@@ -58,9 +37,11 @@
 
 .link_first:hover {
   background-color: var(--color-deco-dark);
+  border-color: var(--color-deco-darker);
 }
 .link_first:active {
   background-color: var(--color-deco-darkest);
+  border-color: var(--color-deco);
 }
 
 .link_second {
@@ -69,14 +50,15 @@
 }
 .link_second:hover {
   background-color: var(--opacity-neutral-darkest-15);
+  border-color: var(--opacity-neutral-darkest-50);
 }
 .link_second:active {
   background-color: var(--opacity-neutral-darkest-50);
+  border-color: var(--opacity-transparent);
 }
 
 .hero_image {
-  width: 100%;
-  max-width: 335px;
+  width: 335px;
   height: 335px;
   margin-top: 32px;
   border-radius: 16px;
@@ -96,24 +78,36 @@
     align-items: center;
     justify-content: center;
     gap: 32px;
+    width: 704px;
   }
 
-  .hero_title,
+  li:first-child {
+    width: 336px;
+  }
+
+  /* .hero_title,
   .hero_text {
     width: 336px;
+  } */
+
+  .link_first,
+  .link_second {
+    display: inline-flex;
   }
 
   .link_first {
     width: 110px;
   }
   .link_second {
-    width: 183px;
+    width: 181px;
+    margin-top: 0;
+    margin-left: 16px;
   }
 
   .hero_image {
     margin-top: 0;
     width: 336px;
-    height: 474px;
+    height: 425px;
   }
 }
 
@@ -126,10 +120,14 @@
     max-width: var(--computer);
   }
 
-  .hero_title,
-  .hero_text {
+  li:first-child {
     width: 640px;
   }
+
+  /* .hero_title,
+  .hero_text {
+    width: 640px;
+  } */
 
   .hero_content {
     width: 1312px;
@@ -139,18 +137,18 @@
     font-size: 56px;
   }
 
-  .link_first,
+  /* .link_first,
   .link_second {
     display: inline-flex;
-  }
+  } */
 
-  .link_first {
+  /* .link_first {
     min-width: 110px;
   }
 
   .link_second {
     min-width: 181px;
-  }
+  } */
   .hero_image {
     min-width: 640px;
     height: 394px;
