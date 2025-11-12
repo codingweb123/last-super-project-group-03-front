@@ -69,13 +69,13 @@ export const GoodsPage = () => {
       <h1 className={css.title}>{pageTitle}</h1>
 
       <section className={css.content}>
-        <aside className={css.filter}>
+        <div className={css.filter}>
           <CategoriesFilter
             onCategoryChange={handleCategoryChange}
             shownCount={paginatedGoods.length}
             totalCount={goods.length}
           />
-        </aside>
+        </div>
 
         <div className={css.goodsBlock}>
           {paginatedGoods.length > 0 ? (

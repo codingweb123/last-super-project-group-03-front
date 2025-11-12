@@ -19,46 +19,57 @@ interface GoodsListProps {
   onResetFilters: () => void;
 }
 
-export const GoodsList: React.FC<GoodsListProps> = ({ filters, onResetFilters }) => {
+export const GoodsList: React.FC<GoodsListProps> = ({
+  filters,
+  onResetFilters,
+}) => {
   const [goods, setGoods] = useState<Good[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
+  // --- Завантаження товарів ---
   useEffect(() => {
     const fetchGoods = async () => {
       try {
         setLoading(true);
         const { data } = await axios.get('/api/goods', {
-          params: { ...filters, page },
+          params: { ...filters, page, limit: 12 },
         });
-        setGoods(data.items);
+
+        // Якщо це перша сторінка — замінюємо товари, інакше додаємо нові
+        setGoods(prev => (page === 1 ? data.items : [...prev, ...data.items]));
         setTotalPages(data.totalPages);
+
+        // Визначаємо, чи є ще товари
+        setHasMore(page < totalPages);
       } catch (error) {
         console.error('Помилка при завантаженні товарів:', error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchGoods();
-  }, [filters, page]);
+  }, [filters, page, totalPages]);
 
-  if (loading) return <p>Завантаження...</p>;
+  // --- Якщо немає товарів ---
+  if (!loading && goods.length === 0) {
+    return (
+      <div className={css.noInfoWrapper}>
+        <MessageNoInfo
+          text="За вашим запитом не знайдено жодних товарів. Спробуйте змінити фільтри або скинути їх."
+          buttonText="Скинути фільтри"
+          onClick={onResetFilters}
+        />
+      </div>
+    );
+  }
 
-  if (goods.length === 0) {
+  // --- Основний рендер ---
   return (
-    <div className={css.noInfoWrapper}>
-      <MessageNoInfo
-        text="За вашим запитом не знайдено жодних товарів, спробуйте змінити фільтри, або скинути їх"
-        buttonText="Скинути фільтри"
-        onClick={onResetFilters}
-      />
-    </div>
-  );
-}
-
-  return (
-    <>
+    <div className={css.goodsContainer}>
       <ul className={css.list}>
         {goods.map(good => (
           <li key={good.id}>
@@ -77,23 +88,18 @@ export const GoodsList: React.FC<GoodsListProps> = ({ filters, onResetFilters })
         ))}
       </ul>
 
-      <div className={css.pagination}>
+      {/* --- Кнопка "Показати більше" --- */ }
+      {hasMore && !loading && (
         <button
-          disabled={page === 1}
-          onClick={() => setPage(prev => prev - 1)}
-        >
-          Попередня
-        </button>
-        <span>
-          {page} / {totalPages}
-        </span>
-        <button
-          disabled={page === totalPages}
+          type="button"
           onClick={() => setPage(prev => prev + 1)}
+          className={css.loadMoreBtn}
         >
-          Наступна
+          Показати більше
         </button>
-      </div>
-    </>
+      )}
+
+      {loading && <p className={css.loadingText}>Завантаження...</p>}
+    </div>
   );
 };
