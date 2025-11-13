@@ -1,14 +1,13 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
-  images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "res.cloudinary.com" },
-      { protocol: "https", hostname: "ftp.goit.study" },
-    ],
-  },
-};
+	reactCompiler: true,
+	images: {
+		remotePatterns: [
+			{ protocol: "https", hostname: "res.cloudinary.com" },
+			{ protocol: "https", hostname: "ftp.goit.study" },
+		],
+	},
+}
 
-export default nextConfig;
+export default nextConfig

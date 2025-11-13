@@ -1,166 +1,179 @@
-import { User } from "@/types/user";
-import { nextServer } from "./api";
+import { User } from "@/types/user"
+import { nextServer } from "./api"
 import {
-  Category,
-  Cloth,
-  Feedback,
-  Order,
-  OrderUserData,
-  Status,
-} from "@/types/shop";
+	Category,
+	Cloth,
+	Feedback,
+	Order,
+	OrderUserData,
+	Status,
+} from "@/types/shop"
 
 export type RegisterRequest = Pick<User, "firstName" | "phone"> & {
-  password: string;
-};
-export type LoginRequest = Omit<RegisterRequest, "firstName">;
+	password: string
+}
+
+export type LoginRequest = Omit<RegisterRequest, "firstName">
+
+export type OrderData = Omit<
+	Order,
+	"_id" | "date" | "status" | "sum" | "userId" | "orderNum"
+>
 
 type GetGoods = Partial<{
-  category: string;
-  sizes: string;
-  price: number;
-  color: string;
-  gender: string;
-  page: number;
-  perPage: number;
-}>;
+	category: string
+	sizes: string
+	price: number
+	color: string
+	gender: string
+	page: number
+	perPage: number
+}>
 
 type GetCategories = Partial<{
-  page: number;
-  perPage: number;
-}>;
+	page: number
+	perPage: number
+}>
 
 type CategoriesResponse = Promise<
-  Paginated & {
-    totalCategories: number;
-    categories: Category[];
-  }
->;
+	Paginated & {
+		totalCategories: number
+		categories: Category[]
+	}
+>
 
 type GetFeedbacks = Partial<{
-  page: number;
-  perPage: number;
-  goodId: string;
-}>;
+	page: number
+	perPage: number
+	goodId: string
+}>
 
 type FeedbacksResponse = Promise<
-  Paginated & {
-    totalFeedbacks: number;
-    feedbacks: Feedback[];
-  }
->;
+	Paginated & {
+		totalFeedbacks: number
+		feedbacks: Feedback[]
+	}
+>
 
 type GoodsResponse = Promise<
-  Paginated & {
-    totalGoods: number;
-    goods: Cloth[];
-  }
->;
+	Paginated & {
+		totalGoods: number
+		goods: Cloth[]
+	}
+>
 
 type Paginated = {
-  page: number;
-  perPage: number;
-  totalPages: number;
-};
+	page: number
+	perPage: number
+	totalPages: number
+}
 
 export async function getGoods({
-  category,
-  sizes,
-  price,
-  color,
-  gender,
-  page,
-  perPage,
+	category,
+	sizes,
+	price,
+	color,
+	gender,
+	page,
+	perPage,
 }: GetGoods) {
-  const { data } = await nextServer.get<GoodsResponse>(`/goods`, {
-    params: {
-      ...(category && { category }),
-      ...(sizes && { sizes }),
-      ...(price && { price }),
-      ...(color && { color }),
-      ...(gender && { gender }),
-      ...(page && { page }),
-      ...(perPage && { perPage }),
-    },
-  });
-  return data;
+	const { data } = await nextServer.get<GoodsResponse>(`/goods`, {
+		params: {
+			...(category && { category }),
+			...(sizes && { sizes }),
+			...(price && { price }),
+			...(color && { color }),
+			...(gender && { gender }),
+			...(page && { page }),
+			...(perPage && { perPage }),
+		},
+	})
+	return data
 }
 
 export async function getOrders() {
-  const { data } = await nextServer.get("/orders");
-  return data;
+	const { data } = await nextServer.get("/orders")
+	return data
 }
 
-export async function createOrder(orderData: Order) {
-  const { data } = await nextServer.post("/orders", orderData);
-  return data;
+export async function createOrder(orderData: OrderData) {
+	const { data } = await nextServer.post("/orders", orderData)
+	return data
+}
+
+export async function createOrderUser(orderData: OrderData) {
+	const { data } = await nextServer.post("/orders/user", orderData)
+	return data
 }
 
 export async function patchOrder(orderId: string, status: Status) {
-  const { data } = await nextServer.patch("/orders", { status });
-  return data;
+	const { data } = await nextServer.patch(`/orders/${orderId}`, { status })
+	return data
 }
 
 export async function getSingleGood(id: string) {
-  const { data } = await nextServer.get<Cloth>(`/goods/${id}`);
-  return data;
+	const { data } = await nextServer.get<Cloth>(`/goods/${id}`)
+	return data
 }
 
 export async function getCategories({ page, perPage }: GetCategories) {
-  const { data } = await nextServer.get<CategoriesResponse>("/categories", {
-    params: {
-      ...(page && { page }),
-      ...(perPage && { perPage }),
-    },
-  });
-  return data;
+	const { data } = await nextServer.get<CategoriesResponse>("/categories", {
+		params: {
+			...(page && { page }),
+			...(perPage && { perPage }),
+		},
+	})
+	return data
 }
 
 export async function getFeedbacks({ page, perPage, goodId }: GetFeedbacks) {
-  const { data } = await nextServer.get<FeedbacksResponse>("/feedbacks", {
-    params: {
-      ...(page && { page }),
-      ...(perPage && { perPage }),
-      ...(goodId && { goodId }),
-    },
-  });
-  return data;
+	const { data } = await nextServer.get<FeedbacksResponse>("/feedbacks", {
+		params: {
+			...(page && { page }),
+			...(perPage && { perPage }),
+			...(goodId && { goodId }),
+		},
+	})
+	return data
 }
 
 export async function login(userData: LoginRequest) {
-  const { data } = await nextServer.post<User>("/auth/login", userData);
-  return data;
+	const { data } = await nextServer.post<User>("/auth/login", userData)
+	return data
 }
 
 export async function register(userData: RegisterRequest) {
-  const { data } = await nextServer.post<User>("/auth/register", userData);
-  return data;
+	const { data } = await nextServer.post<User>("/auth/register", userData)
+	return data
 }
 
 export async function checkSession() {
-  const { data } = await nextServer.get<{ success: boolean }>("/auth/session");
-  return data.success;
+	const { data } = await nextServer.get<{ success: boolean }>("/auth/session")
+	return data.success
 }
 
 export async function getMe() {
-  const { data } = await nextServer.get<User>("/auth/me");
-  return data;
+	const { data } = await nextServer.get<User>("/auth/me")
+	return data
 }
 
 export async function editMe(userData: OrderUserData) {
-  const { data } = await nextServer.patch<User>("/users/me", userData);
-  return data;
+	const { data } = await nextServer.patch<User>("/users/me", userData)
+	return data
 }
 
-export async function createGoodReview(id: string, reviewData: Feedback) {
-  const { data } = await nextServer.patch(`/goods/${id}/review`, reviewData);
-  return data;
+export async function createFeedback(
+	reviewData: Omit<Feedback, "_id" | "date">
+) {
+	const { data } = await nextServer.post(`/feedbacks`, reviewData)
+	return data
 }
 
 export async function subscribe(email: string): Promise<{ message: string }> {
-  const { data } = await nextServer.post(`/subscriptions`, { email });
-  return data;
+	const { data } = await nextServer.post(`/subscriptions`, { email })
+	return data
 }
 
 export async function logout() {
-  await nextServer.post("/auth/logout");
+	await nextServer.post("/auth/logout")
 }

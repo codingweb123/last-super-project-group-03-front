@@ -1,10 +1,17 @@
-import { Cloth } from "@/types/shop"
+import { Color, Size } from "@/types/shop"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
+type BasketProduct = {
+	id: string
+	size: Size
+	color: Color
+	amount: number
+}
+
 interface BasketStore {
-	basket: Cloth[]
-	setBasket: (basket: Cloth[]) => void
+	basket: BasketProduct[]
+	setBasket: (basket: BasketProduct[]) => void
 	clearBasket: () => void
 }
 

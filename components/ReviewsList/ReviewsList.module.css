@@ -1,0 +1,56 @@
+.swiper {
+	margin-top: 40px;
+}
+
+.swiper h3 {
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.5;
+	margin-top: 32px;
+}
+
+.slide {
+	display: flex !important;
+	flex-direction: column;
+	justify-content: space-between;
+	min-height: 204px;
+	max-height: 204px;
+}
+
+.swiper p {
+	display: -webkit-box;
+	line-clamp: 4;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 4;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 1.4;
+	letter-spacing: -0.01em;
+	margin-top: 32px;
+}
+
+.link {
+	position: relative;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.5;
+	margin-top: 4px;
+}
+
+.link:hover::after {
+	width: 150px;
+}
+
+.link::after {
+	position: absolute;
+	content: "";
+	right: 0;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	height: 2px;
+	transition: width var(--transition);
+	background-color: #000;
+}
