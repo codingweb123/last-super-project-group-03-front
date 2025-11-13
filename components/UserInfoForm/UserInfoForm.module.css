@@ -1,118 +1,113 @@
 .form {
-    line-height: 150%;
+	line-height: 150%;
 }
 
 .fieldGroup {
-    color: var(--color-scheme-1-text);
+	color: var(--color-scheme-1-text);
+	display: flex;
+	flex-direction: column;
+	row-gap: 8px;
+}
 
-    display: flex;
-    flex-direction: column;
-    row-gap: 8px;
-
-    &:not(.groupedGroups .fieldGroup) {
-        margin-bottom: 24px;
-    }
+.fieldGroup:not(.groupedGroups .fieldGroup) {
+	margin-bottom: 24px;
 }
 
 .groupedGroups {
-    display: flex;
-    flex-direction: column;
-    row-gap: 16px;
-
-    margin-bottom: 24px;
+	display: flex;
+	flex-direction: column;
+	row-gap: 16px;
+	margin-bottom: 24px;
 }
 
 .field {
-    line-height: inherit;
+	line-height: inherit;
+	border: 1px solid var(--opacity-neutral-darkest-15);
+	border-radius: 16px;
+	padding: 8px;
+	height: 40px;
+	background: transparent;
+	transition:
+		color var(--transition),
+		border-color var(--transition);
+}
 
-    border: 1px solid var(--opacity-neutral-darkest-15);
-    border-radius: 16px;
-    padding: 8px;
-    height: 40px;
+.field::-webkit-outer-spin-button,
+.field::-webkit-inner-spin-button {
+	display: none;
+	-webkit-appearance: none;
+	margin: 0;
+}
 
-    background: transparent;
+.field[type="number"] {
+	appearance: textfield;
+}
 
-    transition: color var(--transition),
-                border-color var(--transition);
+.field::placeholder {
+	color: var(--opacity-neutral-darkest-60);
+}
 
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-        display: none;
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    &[type=number] {
-        appearance: textfield;
-    }
-    &::placeholder {
-        color: var(--opacity-neutral-darkest-60);
-    }
-    &:focus {
-        border-color: var(--color-scheme-1-accent);
+.field:focus {
+	border-color: var(--color-scheme-1-accent);
+}
 
-        &::placeholder {
-            color: transparent;
-        }
-    }
-    &:has(+ .error) {
-        color: var(--color-red);
-        border-color: var(--color-red);
-    }
+.field:focus::placeholder {
+	color: transparent;
+}
+
+.field:has(+ .error) {
+	color: var(--color-red);
+	border-color: var(--color-red);
 }
 
 .error {
-    font-size: 12px;
-    color: var(--color-red);
+	font-size: 12px;
+	color: var(--color-red);
 }
 
 .button {
-    cursor: pointer;
+	font-weight: 500;
+	line-height: inherit;
+	color: var(--color-neutral-darkest);
+	border: 1px solid var(--color-deco);
+	border-radius: 100px;
+	width: 100%;
+	height: 36px;
+	cursor: pointer;
+	background: var(--color-deco);
+	transition:
+		border-color var(--transition),
+		color var(--transition),
+		background-color var(--transition);
+}
 
-    font-weight: 500;
-    line-height: inherit;
-    color: var(--color-neutral-darkest);
+.button:hover,
+.button:focus {
+	border-color: var(--color-deco-darker);
+	background: var(--color-deco-dark);
+}
 
-    border: 1px solid var(--color-deco);
-    border-radius: 100px;
-    width: 100%;
-    height: 36px;
-
-    background: var(--color-deco);
-
-    transition: border-color var(--transition),
-                color var(--transition),
-                background-color var(--transition);
-    
-    &:hover,
-    &:focus {
-        border-color: var(--color-deco-darker);
-        background: var(--color-deco-dark);
-    }
-    &:active {
-        border-color: var(--color-deco);
-        color: var(--color-white);
-        background-color: var(--color-deco-darkest);
-    }
+.button:active {
+	border-color: var(--color-deco);
+	color: var(--color-white);
+	background-color: var(--color-deco-darkest);
 }
 
 @media screen and (min-width: 768px) {
-    .groupedGroups {
-        flex-direction: row;
-        column-gap: 32px;
-
-        & > .fieldGroup {
-            width: 100%;
-        }
-    }
-
-    .button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        margin-left: auto;
-        margin-right: auto;
-        padding: 6px 12px;
-        width: auto;
-    }
+	.groupedGroups {
+		flex-direction: row;
+		column-gap: 32px;
+	}
+	.groupedGroups > .fieldGroup {
+		width: 100%;
+	}
+	.button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 6px 12px;
+		width: auto;
+	}
 }

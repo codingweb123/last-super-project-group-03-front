@@ -1,283 +1,131 @@
 .footer {
-  background-color: #fff;
-  padding: 40px 0 20px;
-  border-top: 1px solid #e0e0e0;
-  width: 100%;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  margin-bottom: 30px;
-}
-
-.topSection {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.brandSection {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+	padding: 48px 0;
+	background-color: var(--color-scheme-6-background);
 }
 
 .logo {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  text-align: center;
+	display: flex;
+	place-self: center;
 }
 
-.navigation {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.links {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 16px;
+	margin-top: 40px;
 }
 
-.navTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  text-align: center;
-  margin-bottom: 10px;
+.links li:first-child {
+	margin-bottom: 8px;
 }
 
-.navList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  text-align: center;
+.footer h3 {
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.5;
 }
 
-.navLink {
-  color: #333;
-  text-decoration: none;
-  font-size: 16px;
-  transition: color 0.3s ease;
-  cursor: pointer;
-  display: block;
+.links a {
+	position: relative;
+	font-size: 14px;
+	line-height: 1.5;
 }
 
-.navLink:hover {
-  color: #007bff;
+.links a:hover::after {
+	width: 100%;
 }
 
-.newsletter {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 400px;
-  margin: 0 auto;
+.links a::after {
+	position: absolute;
+	content: "";
+	left: 0;
+	bottom: 0;
+	width: 0;
+	height: 1.5px;
+	transition: width var(--transition);
+	background-color: #000;
 }
 
-.newsletterTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 5px;
-  text-align: center;
+.subscribe {
+	margin-top: 32px;
 }
 
-.newsletterText {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 15px;
-  line-height: 1.5;
-  text-align: center;
+.subscribe h3 {
+	margin-bottom: 16px;
 }
 
-.newsletterForm {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.subscribe p {
+	font-size: 16px;
+	line-height: 1.5;
 }
 
-.emailInput {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  outline: none;
-  width: 100%;
+.hr {
+	display: block;
+	border: 0;
+	width: 100%;
+	height: 1px;
+	color: unset;
+	margin-top: 40px;
+	margin-bottom: 32px;
+	background-color: var(--color-scheme-6-border);
 }
 
-.emailInput:focus {
-  border-color: #007bff;
+.about span {
+	display: flex;
+	place-self: center;
+	font-size: 14px;
+	line-height: 1.5;
 }
 
-.emailInput:invalid {
-  border-color: #dc3545;
+.socials {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 12px;
+	margin-top: 16px;
 }
 
-.subscribeButton {
-  padding: 10px 20px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%;
+@media screen and (min-width: 768px) {
+	.about {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.links,
+	.subscribe {
+		margin-top: 0;
+	}
+	.links {
+		align-items: flex-start;
+	}
+	.subscribe {
+		max-width: 400px;
+	}
+	.links a {
+		font-size: 12px;
+	}
+	.logo {
+		place-self: flex-start;
+	}
+	.top {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+	}
+	.socials svg {
+		width: 24px;
+		height: 24px;
+	}
+	.about span {
+		font-size: 12px;
+	}
 }
 
-.subscribeButton:hover {
-  background-color: #555;
-}
-
-.copyright {
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-  padding-top: 20px;
-  border-top: 1px solid #e0e0e0;
-}
-
-/* mobile (320px - 767px) - уже реализовано выше */
-
-/* tablet (768px - 1439px) */
-@media (min-width: 768px) {
-  .footer {
-    padding: 50px 0 25px;
-  }
-
-  .content {
-    gap: 40px;
-    margin-bottom: 40px;
-  }
-
-  .topSection {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 40px;
-  }
-
-  .brandSection {
-    flex: 1;
-    gap: 25px;
-  }
-
-  .logo {
-    text-align: left;
-    font-size: 32px;
-  }
-
-  .navigation {
-    gap: 20px;
-  }
-
-  .navTitle {
-    text-align: left;
-    margin-bottom: 15px;
-  }
-
-  .navList {
-    flex-direction: row;
-    gap: 30px;
-    text-align: left;
-  }
-
-  .newsletter {
-    margin: 0;
-    max-width: 350px;
-  }
-
-  .newsletterTitle {
-    text-align: left;
-  }
-
-  .newsletterText {
-    text-align: left;
-  }
-
-  .newsletterForm {
-    flex-direction: row;
-  }
-
-  .subscribeButton {
-    width: auto;
-    min-width: 120px;
-  }
-
-  .copyright {
-    font-size: 15px;
-    padding-top: 25px;
-  }
-}
-
-/* desktop (1440px+) */
-@media (min-width: 1440px) {
-  .footer {
-    padding: 60px 0 30px;
-  }
-
-
-  .content {
-    gap: 50px;
-    margin-bottom: 50px;
-  }
-
-  .topSection {
-    gap: 60px;
-  }
-
-  .brandSection {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 60px;
-    flex: 2;
-  }
-
-  .logo {
-    font-size: 36px;
-    min-width: 150px;
-  }
-
-  .navigation {
-    flex: 1;
-    gap: 25px;
-  }
-
-  .navList {
-    gap: 40px;
-  }
-
-  .navLink {
-    font-size: 17px;
-  }
-
-  .newsletter {
-    max-width: 400px;
-    flex: 1;
-  }
-
-  .newsletterTitle {
-    font-size: 17px;
-  }
-
-  .newsletterText {
-    font-size: 15px;
-  }
-
-  .emailInput {
-    padding: 12px 16px;
-    font-size: 15px;
-  }
-
-  .subscribeButton {
-    padding: 12px 24px;
-    font-size: 15px;
-  }
-
-  .copyright {
-    font-size: 16px;
-    padding-top: 30px;
-  }
+@media screen and (min-width: 1440px) {
+	.links a {
+		font-size: 14px;
+	}
 }

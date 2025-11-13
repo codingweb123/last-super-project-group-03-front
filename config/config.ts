@@ -1,12 +1,19 @@
 export const enum Routes {
 	Home = "/",
-	Login = "/auth/login",
-	Register = "/auth/register",
+	Login = "/login",
+	Register = "/register",
 	Categories = "/categories",
 	Goods = "/goods",
 	Basket = "/basket",
 	Order = "/order",
 	Profile = "/profile",
+}
+
+export const enum Socials {
+	Facebook = "https://facebook.com/clothica",
+	Instagram = "https://instagram.com/clothica",
+	X = "https://x.com/clothica",
+	Youtube = "https://youtube.com/clothica",
 }
 
 export const enum SEO {

@@ -1,27 +1,61 @@
-.lastReviews {
-  padding: 64px 20px;
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	place-self: flex-end;
+	width: 122px;
+	height: 36px;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.5;
+	border-radius: 100px;
+	background-color: var(--opacity-neutral-darkest-5);
 }
 
-.title {
-  font-family: var(--second-family);
-  margin-bottom: 40px;
-  line-height: 1.2;
-  font-weight: 400;
-  font-size: 36px;
-  letter-spacing: -0.01em;
+.navBtns {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin-top: 40px;
 }
 
-@media screen and (min-width: 768px) {
-  .lastReviews {
-    padding: 64px 32px;
-  }
+.navBtn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 48px;
+	height: 48px;
+	cursor: pointer;
+	border-radius: 100px;
+	border: 1px solid var(--color-scheme-1-background);
+	transition:
+		fill var(--transition),
+		border-color var(--transition),
+		background-color var(--transition);
+	background-color: var(--color-scheme-5-foreground);
 }
 
-@media screen and (min-width: 1440px) {
-  .lastReviews {
-    padding: 112px 64px;
-  }
-  .title {
-    font-size: 48px;
-  }
+.navBtn:not(:disabled):hover,
+.navbtn:not(:disabled):focus {
+	border-color: var(--color-deco-darker);
+	background-color: var(--color-deco-dark);
+}
+
+.navBtn:not(:disabled):active {
+	fill: #fff;
+	border-color: var(--color-deco);
+	background-color: var(--color-deco-darkest);
+}
+
+.navBtn:disabled {
+	opacity: 0.3;
+	cursor: default;
+}
+
+.leftBtn {
+	margin-right: 16px;
+}
+
+.rightBtn svg {
+	transform: rotate(180deg);
 }
