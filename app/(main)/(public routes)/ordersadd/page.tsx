@@ -1,6 +1,8 @@
 "use client"
 
+import { Routes } from "@/config/config"
 import { useBasketStore } from "@/lib/stores/basketStore"
+import { redirect } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function OrdersAdd() {
@@ -36,5 +38,5 @@ export default function OrdersAdd() {
 
 		add()
 	}, [isAdded, setBasket])
-	return <p>Added</p>
+	return isAdded ? redirect(Routes.Home) : <p>Adding...</p>
 }

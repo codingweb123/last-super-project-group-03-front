@@ -13,7 +13,7 @@ export default async function PopularGoods() {
 	const queryClient = new QueryClient()
 	await queryClient.prefetchQuery({
 		queryKey: ["popularGoods", { page: 1 }],
-		queryFn: () => getGoods({}),
+		queryFn: () => getGoods({ page: 1, sort: "desc" }),
 		staleTime: 15 * 60 * 1000,
 	})
 

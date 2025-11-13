@@ -47,9 +47,7 @@ export default function GoodsOrderList() {
 	}
 
 	const removeFromBasket = (index: number) => {
-		const newBasket = [...basket]
-		delete newBasket[index]
-
+		const newBasket = basket.filter((_, sid) => sid != index)
 		setBasket(newBasket)
 	}
 

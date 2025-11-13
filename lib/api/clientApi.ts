@@ -28,6 +28,7 @@ type GetGoods = Partial<{
 	gender: string
 	page: number
 	perPage: number
+	sort: "desc"
 }>
 
 type GetCategories = Partial<{
@@ -76,6 +77,7 @@ export async function getGoods({
 	gender,
 	page,
 	perPage,
+	sort,
 }: GetGoods) {
 	const { data } = await nextServer.get<GoodsResponse>(`/goods`, {
 		params: {
@@ -86,6 +88,7 @@ export async function getGoods({
 			...(gender && { gender }),
 			...(page && { page }),
 			...(perPage && { perPage }),
+			...(sort && { sort }),
 		},
 	})
 	return data

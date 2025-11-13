@@ -18,8 +18,8 @@ export const enum Socials {
 
 export const enum SEO {
 	SiteName = "Clothica",
-	Title = "Clothica - Online Clothing Store | Fashion Trends 2025",
-	Description = "Discover Clothica, your online fashion destination. Shop trendy clothing, new collections, and stylish looks with fast worldwide delivery. Dress with confidence!",
-	Keywords = "clothing store, online fashion, buy clothes online, trendy outfits, women's clothing, men's clothing, stylish wear, fashion 2025, Clothica, online shopping",
+	Title = "Clothica - Інтернет-магазин одягу | Модні тренди 2025",
+	Description = "Відкрийте для себе Clothica — ваш онлайн-ресурс моди. Купуйте стильний одяг, нові колекції та модні образи з швидкою доставкою по всьому світу. Одягайтеся з упевненістю!",
+	Keywords = "магазин одягу, онлайн мода, купити одяг онлайн, модні комплекти, жіночий одяг, чоловічий одяг, стильний одяг, мода 2025, Clothica, онлайн покупки",
 	Cover = "https://res.cloudinary.com/dsbovd5fz/image/upload/v1762346739/Cover_eiuykj.png",
 }

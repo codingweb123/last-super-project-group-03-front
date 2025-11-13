@@ -15,7 +15,7 @@ export default function PopularGoodsClient() {
 
 	const { data } = useQuery({
 		queryKey: ["popularGoods", { page }],
-		queryFn: () => getGoods({ page }),
+		queryFn: () => getGoods({ page, sort: "desc" }),
 		staleTime: 15 * 60 * 1000,
 		refetchOnMount: false,
 		enabled: isNewPortion,
