@@ -1,0 +1,34 @@
+.navigation_list{
+
+}
+
+.list_links_authorisation{
+    display:flex;
+    flex-direction: row;
+}
+
+.link_authorisation{
+    position: relative;
+    height: 48px;
+    width:240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.link_authorisation::after{
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+    content: "";
+    width: 100%;
+    height: 2px;
+    background-color: #00000033;
+    transition: opacity 250ms ease-in-out;
+}
+
+
+.link_authorisation:hover::after,
+.active_link::after{
+    opacity: 1;
+}

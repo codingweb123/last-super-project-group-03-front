@@ -1,7 +1,9 @@
+.registration_section{
+  padding: 130px 0;
+}
 .container_register{
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 .selected-auth {
   text-decoration: underline;

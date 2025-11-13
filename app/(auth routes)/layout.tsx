@@ -3,10 +3,11 @@ import { Inter, Nunito_Sans } from "next/font/google"
 import { SEO } from "@/config/config"
 import TanStackProvider from "@/components/TanStackProvider/TanStackProvider"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import Header from "@/components/Header/Header"
-import Footer from "@/components/Footer/Footer"
+import Header from "@/components/AuthHeader/authHeader"
+import Footer from "@/components/AuthFooter/authFooter"
 import "modern-normalize"
-import "./globals.css"
+import "../(main)/globals.css"
+import "./authGlobals.css"
 
 const inter = Inter({
 	display: "swap",
@@ -58,25 +59,24 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
-	modal,
 }: Readonly<{
 	children: React.ReactNode
-	modal: React.ReactNode
 }>) {
 	return (
-			<body className={`${inter.variable} ${nunito_Sans.variable} `}>
+		<html lang="en">
+			<head>
+				<link rel="icon" href="/favicon.svg" />
+			</head>
+			<body className={`${inter.variable} ${nunito_Sans.variable}`}>
 				<TanStackProvider>
-					<header>
-                        <span>Clothica</span>
-                    </header>
+					<Header/>
                     <main>
                         {children}
                     </main>
-                    <footer>
-                        <span>&#xa9; Clothica. Всі права захищені. </span>
-                    </footer>
+                    <Footer/>
 					<ReactQueryDevtools />
 				</TanStackProvider>
 			</body>
+		</html>
 	)
 }
