@@ -26,7 +26,7 @@ const initialValues: OrderFormValues = {
     <div className="container">
       <section className={css.registration_section}>
         <AuthNavigation route="/register"/>
-        <Formik initialValues={initialValues} onSubmit={}>
+        <Formik initialValues={initialValues} onSubmit={() => {}}>
           <Form>
 
           </Form>
