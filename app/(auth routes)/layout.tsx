@@ -3,8 +3,10 @@ import { Inter, Nunito_Sans } from "next/font/google"
 import { SEO } from "@/config/config"
 import TanStackProvider from "@/components/TanStackProvider/TanStackProvider"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import Header from "@/components/AuthHeader/authHeader"
-import Footer from "@/components/AuthFooter/authFooter"
+import AuthProvider from "@/components/AuthProvider/AuthProvider"
+import { Toaster } from "react-hot-toast"
+import AuthFooter from "@/components/AuthFooter/AuthFooter"
+import AuthHeader from "@/components/AuthHeader/AuthHeader"
 import "modern-normalize"
 import "../(main)/globals.css"
 import "./authGlobals.css"
@@ -24,11 +26,11 @@ const nunito_Sans = Nunito_Sans({
 })
 
 export const metadata: Metadata = {
-	title: SEO.Title,
+	title: "Авторизацiя | " + SEO.Title,
 	description: SEO.Description,
 	keywords: SEO.Keywords,
 	openGraph: {
-		title: SEO.Title,
+		title: "Авторизацiя | " + SEO.Title,
 		description: SEO.Description,
 		type: "website",
 		siteName: SEO.SiteName,
@@ -42,7 +44,7 @@ export const metadata: Metadata = {
 		],
 	},
 	twitter: {
-		title: SEO.Title,
+		title: "Авторизацiя | " + SEO.Title,
 		description: SEO.Description,
 		card: "summary_large_image",
 		creator: "FlowDevs",
@@ -57,7 +59,7 @@ export const metadata: Metadata = {
 	},
 }
 
-export default function RootLayout({
+export default function AuthLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode
@@ -68,12 +70,13 @@ export default function RootLayout({
 				<link rel="icon" href="/favicon.svg" />
 			</head>
 			<body className={`${inter.variable} ${nunito_Sans.variable}`}>
+				<Toaster />
 				<TanStackProvider>
-					<Header/>
-                    <main>
-                        {children}
-                    </main>
-                    <Footer/>
+					<AuthProvider>
+						<AuthHeader />
+						<main>{children}</main>
+						<AuthFooter />
+					</AuthProvider>
 					<ReactQueryDevtools />
 				</TanStackProvider>
 			</body>

@@ -1,9 +1,11 @@
-import c from "./authFooter.module.css"
+import css from "./AuthFooter.module.css"
 
-export default function authFooter(){
-    return(
-        <footer className={c.footer}>
-            &#xa9; Clothica. Всі права захищені.
-        </footer>
-    )
+export default function AuthFooter() {
+	return (
+		<footer className={css.footer}>
+			<div className="container">
+				<p>&copy; 2025 Clothica. Всі права захищені.</p>
+			</div>
+		</footer>
+	)
 }
