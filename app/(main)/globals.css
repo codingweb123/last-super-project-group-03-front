@@ -82,6 +82,11 @@
 	display: none;
 }
 
+html,
+body {
+	scroll-behavior: smooth;
+}
+
 a {
 	color: inherit;
 	text-decoration: none;
@@ -158,12 +163,10 @@ body {
 	.section h2 {
 		font-size: 48px;
 	}
-
 	.container {
 		max-width: var(--computer);
 		padding: 0 64px;
 	}
-
 	.section {
 		padding: 112px 0;
 	}
