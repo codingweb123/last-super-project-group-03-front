@@ -12,7 +12,13 @@ import {
 export type RegisterRequest = Pick<User, "firstName" | "phone"> & {
 	password: string
 }
+
 export type LoginRequest = Omit<RegisterRequest, "firstName">
+
+export type OrderData = Omit<
+	Order,
+	"_id" | "date" | "status" | "sum" | "userId" | "orderNum"
+>
 
 type GetGoods = Partial<{
 	category: string
@@ -90,13 +96,18 @@ export async function getOrders() {
 	return data
 }
 
-export async function createOrder(orderData: Order) {
+export async function createOrder(orderData: OrderData) {
 	const { data } = await nextServer.post("/orders", orderData)
 	return data
 }
 
+export async function createOrderUser(orderData: OrderData) {
+	const { data } = await nextServer.post("/orders/user", orderData)
+	return data
+}
+
 export async function patchOrder(orderId: string, status: Status) {
-	const { data } = await nextServer.patch("/orders", { status })
+	const { data } = await nextServer.patch(`/orders/${orderId}`, { status })
 	return data
 }
 
@@ -151,8 +162,10 @@ export async function editMe(userData: OrderUserData) {
 	return data
 }
 
-export async function createGoodReview(id: string, reviewData: Feedback) {
-	const { data } = await nextServer.patch(`/goods/${id}/review`, reviewData)
+export async function createFeedback(
+	reviewData: Omit<Feedback, "_id" | "date">
+) {
+	const { data } = await nextServer.post(`/feedbacks`, reviewData)
 	return data
 }
 
