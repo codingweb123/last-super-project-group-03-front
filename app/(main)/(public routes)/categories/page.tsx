@@ -6,8 +6,8 @@ import { getCategories } from "@/lib/api/clientApi"
 import { useEffect, useState } from "react"
 import { Category } from "@/types/shop"
 import { useMediaQuery } from "react-responsive"
-import CategoriesListFallback from "@/components/CategoriesListFallback/CategoriesListFallback"
 import css from "./CategoriesPage.module.css"
+import CategoriesListFallback from "@/components/CategoriesListFallback/CategoriesListFallback"
 
 export default function CategoriesPage() {
 	const [page, setPage] = useState<number>(1)
