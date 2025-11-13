@@ -7,6 +7,8 @@ import Header from "@/components/Header/Header"
 import Footer from "@/components/Footer/Footer"
 import "modern-normalize"
 import "./globals.css"
+import { Toaster } from "react-hot-toast"
+import AuthProvider from "@/components/AuthProvider/AuthProvider"
 
 const inter = Inter({
 	display: "swap",
@@ -69,13 +71,16 @@ export default function RootLayout({
 				<link rel="icon" href="/favicon.svg" />
 			</head>
 			<body className={`${inter.variable} ${nunito_Sans.variable}`}>
+				<Toaster />
 				<TanStackProvider>
-					<Header />
-					<main>
-						{children}
-						{modal}
-					</main>
-					<Footer />
+					<AuthProvider>
+						<Header />
+						<main>
+							{children}
+							{modal}
+						</main>
+						<Footer />
+					</AuthProvider>
 					<ReactQueryDevtools />
 				</TanStackProvider>
 			</body>
