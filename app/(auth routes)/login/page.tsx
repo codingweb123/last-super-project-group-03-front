@@ -3,7 +3,6 @@
 import AuthNavigation from "@/components/AuthNavigation/AuthNavigation"
 import { Routes } from "@/config/config"
 import { Formik, Form, FormikHelpers, Field, ErrorMessage } from "formik"
-import { useState } from "react"
 import { login, LoginRequest } from "@/lib/api/clientApi"
 import { useMutation } from "@tanstack/react-query"
 import { useAuthStore } from "@/lib/stores/authStore"
