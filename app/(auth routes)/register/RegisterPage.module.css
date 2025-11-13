@@ -1,11 +1,3 @@
 .registration_section{
   padding: 130px 0;
 }
-.container_register{
-  display: flex;
-  justify-content: center;
-}
-.selected-auth {
-  text-decoration: underline;
-  text-decoration-color: #00000033;
-}
