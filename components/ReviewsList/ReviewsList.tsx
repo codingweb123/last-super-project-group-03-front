@@ -17,6 +17,9 @@ interface Props {
 	rightBtnClass?: string
 }
 
+const checkStars = (stars: number, checkOn: number): string =>
+	stars >= checkOn ? "-filled" : stars === checkOn - 0.5 ? "-half" : ""
+
 export default function ReviewsList({
 	feedbacks,
 	leftBtnClass,
@@ -52,20 +55,22 @@ export default function ReviewsList({
 								<svg
 									key={`${feedback._id}${star}`}
 									className="icon"
-									width={20}
-									height={19}>
+									width={26}
+									height={26}>
 									<use
-										href={`/icons.svg#i-star${star < Math.floor(feedback.rate) ? "-filled" : feedback.rate % 1 != 0 && star == Math.floor(feedback.rate) ? "-half" : ""}`}></use>
+										href={`/icons.svg#i-star${checkStars(feedback.rate, star + 1)}`}></use>
 								</svg>
 							))}
 						</span>
 						<p>{feedback.description}</p>
-						<h3>{feedback.author}</h3>
-						<Link
-							href={`${Routes.Goods}/${feedback.goodId._id}`}
-							className={css.link}>
-							{feedback.goodId.name}
-						</Link>
+						<h3>
+							{feedback.author}
+							<Link
+								href={`${Routes.Goods}/${feedback.goodId._id}`}
+								className={css.link}>
+								{feedback.goodId.name}
+							</Link>
+						</h3>
 					</SwiperSlide>
 				))}
 			</Swiper>
