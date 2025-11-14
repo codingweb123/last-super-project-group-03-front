@@ -1,106 +1,102 @@
-import css from "./GoodsPage.module.css";
-import { useState } from "react";
-import { CategoriesFilter } from "@/components/CategoriesFilter/CategoriesFilter";
-import { GoodsList } from "@/components/GoodsList/GoodsList";
-import MessageNoInfo from "@/components/MessageNoInfo/MessageNoInfo";
+"use client"
 
-export interface GoodItem {
-  id: string;
-  name: string;
-  image: string;
-  category: string;
-  price: number;
-  rating: number;
-  reviewsCount: number;
+import { useState, useEffect } from "react"
+import { CategoriesFilter } from "@/components/CategoriesFilter/CategoriesFilter"
+import  GoodsList  from "@/components/GoodsList/GoodsList"
+import MessageNoInfo from "@/components/MessageNoInfo/MessageNoInfo"
+import css from "./GoodsPage.module.css"
+import { nextServer } from "@/lib/api/api"
+
+interface Good {
+  id: string
+  name: string
+  price: number
+  category: string
+  image: string
+  likes: number
+  reviews: number
+}
+export interface CategoriesFilterProps {
+  onSelectCategory: (category: string) => void
 }
 
-// Тимчасові товари для демонстрації
-const initialGoods: GoodItem[] = [
-  {
-    id: "1",
-    name: "Товар 1",
-    image: "/img/1.jpg",
-    category: "Категорія 1",
-    price: 100,
-    rating: 4,
-    reviewsCount: 5,
-  },
-  {
-    id: "2",
-    name: "Товар 2",
-    image: "/img/2.jpg",
-    category: "Категорія 2",
-    price: 200,
-    rating: 5,
-    reviewsCount: 3,
-  },
-  // ...додайте ще за потреби
-];
+const GoodsPage = () => {
+  const [goods, setGoods] = useState<Good[]>([])
+  const [visibleGoodsCount, setVisibleGoodsCount] = useState(12)
+  const [selectedCategory, setSelectedCategory] = useState<string>("Всі товари")
+  const [allGoodsLoaded, setAllGoodsLoaded] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-export const GoodsPage = () => {
-  const [goods, setGoods] = useState<GoodItem[]>(initialGoods);
-  const [pageTitle, setPageTitle] = useState("Всі товари");
-  const [page, setPage] = useState(1);
-  const [itemsPerPage] = useState(12);
+  // Встановлюємо стартову кількість товарів залежно від ширини екрану
+  useEffect(() => {
+    const setInitialCount = () => {
+      const width = window.innerWidth
+      if (width < 768) {
+        setVisibleGoodsCount(8) // моб/планшет
+      } else {
+        setVisibleGoodsCount(12) // десктоп
+      }
+    }
+    setInitialCount()
+    window.addEventListener("resize", setInitialCount)
+    return () => window.removeEventListener("resize", setInitialCount)
+  }, [])
 
-  // Зміна категорії
-  const handleCategoryChange = (newCategory: string | null) => {
-    setPage(1);
-    setPageTitle(newCategory ? newCategory : "Всі товари");
+   useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const res = await nextServer.get<Good[]>("/goods", {
+        params: { category: selectedCategory === "Всі товари" ? undefined : selectedCategory },
+      })
+      setGoods(res.data)
+      setAllGoodsLoaded(res.data.length <= visibleGoodsCount)
+    } catch (err) {
+      console.error(err)
+      setGoods([])
+    } finally {
+      setLoading(false)
+    }
+  }
+  fetchData()
+}, [selectedCategory, visibleGoodsCount])
 
-    // Фільтруємо локально
-    const filtered = newCategory
-      ? initialGoods.filter((g) => g.category === newCategory)
-      : initialGoods;
-
-    setGoods(filtered);
-  };
-
-  // Пагінація локально
-  const handleLoadMore = () => {
-    setPage((prev) => prev + 1);
-  };
-
-  const paginatedGoods = goods.slice(0, page * itemsPerPage);
-  const hasMore = paginatedGoods.length < goods.length;
+  const handleShowMore = () => {
+    const newCount = visibleGoodsCount + 3
+    if (newCount >= goods.length) {
+      setVisibleGoodsCount(goods.length)
+      setAllGoodsLoaded(true)
+    } else {
+      setVisibleGoodsCount(newCount)
+    }
+  }
 
   return (
-    <main className={css.goodsPage}>
-      <h1 className={css.title}>{pageTitle}</h1>
-
-      <section className={css.content}>
+    <div className={css.container}>
+      <h1 className={css.title}>{selectedCategory}</h1>
+      <div className={css.content}>
         <div className={css.filter}>
-          <CategoriesFilter
-            onCategoryChange={handleCategoryChange}
-            shownCount={paginatedGoods.length}
-            totalCount={goods.length}
-          />
+          <CategoriesFilter onSelectCategory={(category: string) => setSelectedCategory(category)} />
         </div>
-
-        <div className={css.goodsBlock}>
-          {paginatedGoods.length > 0 ? (
+        <div className={css.goodsList}>
+          {loading ? (
+            <p>Завантаження...</p>
+          ) : goods.length === 0 ? (
+           <MessageNoInfo text="За вашим запитом не знайдено жодних товарів, спробуйте змінити фільтри, або скинути їх" buttonText="" onClick={() => {}} />
+          ) : (
             <>
-           <GoodsList goods={paginatedGoods} />
-
-              {hasMore && (
-                <button
-                  type="button"
-                  onClick={handleLoadMore}
-                  className={css.loadMoreBtn}
-                >
+              <GoodsList goods={goods.slice(0, visibleGoodsCount)} />
+              {!allGoodsLoaded && (
+                <button className={css.showMoreBtn} type="button" onClick={handleShowMore}>
                   Показати більше
                 </button>
               )}
             </>
-          ) : (
-            <MessageNoInfo
-              text="За вашим запитом не знайдено жодних товарів, спробуйте змінити фільтри або скинути їх."
-              buttonText="Скинути фільтри"
-              onClick={() => handleCategoryChange(null)}
-            />
           )}
         </div>
-      </section>
-    </main>
-  );
-};
+      </div>
+    </div>
+  )
+}
+
+export default GoodsPage;
