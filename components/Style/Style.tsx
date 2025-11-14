@@ -1,52 +1,51 @@
-import Image from "next/image"
-import css from "./Style.module.css"
+import css from "./Style.module.css";
+import Image from "next/image";
 
-export default function Style() {
-	return (
-		<section className={`section ${css.style}`}>
-			<div className="container">
-				<h2>Обери свій унікальний стиль сьогодні</h2>
-				<ul className={css.styles}>
-					<li>
-						<Image
-							src="/images/strings.png"
-							width={56}
-							height={56}
-							alt="Style image"
-						/>
-						<h3>Якість та натуральність</h3>
-						<p>
-							тільки приємні до тіла тканини, які зберігають форму навіть після
-							десятків прань.
-						</p>
-					</li>
-					<li>
-						<Image
-							src="/images/paint.png"
-							width={56}
-							height={56}
-							alt="Style image"
-						/>
-						<h3>Універсальний дизайн</h3>
-						<p>
-							базові кольори та лаконічний стиль, що легко комбінуються між
-							собою.
-						</p>
-					</li>
-					<li>
-						<Image
-							src="/images/shirt.png"
-							width={56}
-							height={56}
-							alt="Style image"
-						/>
-						<h3>Комфорт на кожен день</h3>
-						<p>
-							одяг, який не обмежує рухів i підходить для будь-якої ситуації.
-						</p>
-					</li>
-				</ul>
-			</div>
-		</section>
-	)
-}
+const Style = () => {
+  return (
+    <section className={`section ${css.style}`}>
+      <div className="container">
+        <h2 className={css.style_title}>
+          Обери свій унікальний стиль сьогодні
+        </h2>
+        <ul className={css.style_list}>
+          <li className={css.style_list_item}>
+            <Image
+              src="/images/strings.png"
+              alt="string"
+              width={56}
+              height={56}
+            />
+            <h3 className={css.style_subtitle}>Якість та натуральність</h3>
+            <p className={css.style_list_text}>
+              тільки приємні до тіла тканини, які зберігають форму навіть після
+              десятків прань.
+            </p>
+          </li>
+          <li className={css.style_list_item}>
+            <Image
+              src="/images/paint.png"
+              alt="palette"
+              width={56}
+              height={56}
+            />
+            <h3 className={css.style_subtitle}>Універсальний дизайн</h3>
+            <p className={css.style_list_text}>
+              базові кольори та лаконічний стиль, що легко комбінуються між
+              собою.
+            </p>
+          </li>
+          <li className={css.style_list_item}>
+            <Image src="/images/shirt.png" alt="shirt" width={56} height={56} />
+            <h3 className={css.style_subtitle}>Комфорт на кожен день</h3>
+            <p className={css.style_list_text}>
+              одяг, який не обмежує рухів і підходить для будь-якої ситуації.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </section>
+  );
+};
+
+export default Style;
