@@ -23,7 +23,7 @@ export type OrderData = Omit<
 type GetGoods = Partial<{
 	category: string
 	sizes: string
-	price: number
+	price: string
 	color: string
 	gender: string
 	page: number
@@ -126,6 +126,11 @@ export async function getCategories({ page, perPage }: GetCategories) {
 			...(perPage && { perPage }),
 		},
 	})
+	return data
+}
+
+export async function getSingleCategory(id: string) {
+	const { data } = await nextServer.get<Category>(`/categories/${id}`)
 	return data
 }
 

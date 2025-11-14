@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Routes } from "@/config/config"
+import { Cache, Routes } from "@/config/config"
 import {
 	dehydrate,
 	HydrationBoundary,
@@ -14,7 +14,7 @@ export default async function PopularGoods() {
 	await queryClient.prefetchQuery({
 		queryKey: ["popularGoods", { page: 1 }],
 		queryFn: () => getGoods({ page: 1, sort: "desc" }),
-		staleTime: 15 * 60 * 1000,
+		staleTime: Cache.Time,
 	})
 
 	return (

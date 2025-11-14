@@ -1,5 +1,260 @@
-import css from "./GoodsPage.module.css"
+"use client"
 
-export default async function GoodsPage() {
-	return <></>
+import CategoriesFilter from "@/components/CategoriesFilter/CategoriesFilter"
+import GoodsList from "@/components/GoodsList/GoodsList"
+import { Cache } from "@/config/config"
+import { getCategories, getGoods } from "@/lib/api/clientApi"
+import { Category, Cloth, Color } from "@/types/shop"
+import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import { useMediaQuery } from "react-responsive"
+import MessageNoInfo from "@/components/MessageNoInfo/MessageNoInfo"
+import css from "./GoodsPage.module.css"
+import { useDebounce } from "use-debounce"
+
+export interface FilterValues {
+	color: Color | string
+	category: Category["_id"] | "all"
+	gender: string
+	sizes: string[]
+	priceFrom: number
+	priceTo: number
+}
+
+interface Props {
+	category?: string
+}
+
+export default function GoodsPage({ category }: Props) {
+	const defaultFilterValues: FilterValues = {
+		color: "",
+		sizes: [],
+		gender: "all",
+		category: "all",
+		priceFrom: 0,
+		priceTo: 20000,
+	}
+	const [goods, setGoods] = useState<Cloth[]>([])
+	const [page, setPage] = useState<number>(1)
+	const [isLoaded, setIsLoaded] = useState<boolean>(false)
+	const [priceFrom, setPriceFrom] = useState<number>(
+		defaultFilterValues.priceFrom
+	)
+	const [priceFromDebounce] = useDebounce(priceFrom, 300)
+	const [priceTo, setPriceTo] = useState<number>(defaultFilterValues.priceTo)
+	const [priceToDebounce] = useDebounce(priceTo, 300)
+	const [totalPages, setTotalPages] = useState<number>(1)
+	const [totalGoods, setTotalGoods] = useState<number>(0)
+	const [isNewPortion, setIsNewPortion] = useState<boolean>(true)
+	const [filterCategory, setFilterCategory] = useState<Category["_id"] | "all">(
+		category ?? defaultFilterValues.category
+	)
+	const [filterSizes, setFilterSizes] = useState<string[]>(
+		defaultFilterValues.sizes
+	)
+	const [filterGender, setFilterGender] = useState<string>(
+		defaultFilterValues.gender
+	)
+	const [filterColor, setFilterColor] = useState<Color | string>(
+		defaultFilterValues.color
+	)
+	const perPage = useMediaQuery({ query: "(min-width: 1440px)" }) ? 12 : 8
+
+	const { data: categoriesData } = useQuery({
+		queryKey: ["categories"],
+		queryFn: () => getCategories({ perPage: 12 }),
+		staleTime: Cache.Time,
+	})
+
+	const { data: goodsData } = useQuery({
+		queryKey: [
+			"goods",
+			{
+				page,
+				category: filterCategory,
+				sizes: filterSizes,
+				price: [priceFromDebounce, priceToDebounce],
+				color: filterColor,
+				gender: filterGender,
+			},
+		],
+		queryFn: () =>
+			getGoods({
+				page,
+				perPage,
+				color: filterColor !== "" ? filterColor : undefined,
+				gender: filterGender !== "all" ? filterGender : undefined,
+				category: filterCategory !== "all" ? filterCategory : undefined,
+				sizes: filterSizes.length !== 0 ? filterSizes.join(",") : undefined,
+				price: `${priceFromDebounce},${priceToDebounce}`,
+				sort: "desc",
+			}),
+		staleTime: Cache.Time,
+		enabled: isNewPortion,
+	})
+
+	useEffect(() => {
+		const load = () => {
+			if (goodsData && isNewPortion) {
+				if (page === 1) {
+					setGoods(goodsData.goods)
+					setTotalPages(goodsData.totalPages)
+					setTotalGoods(goodsData.totalGoods)
+				} else {
+					setGoods(prev => [...prev, ...goodsData.goods])
+				}
+				setIsNewPortion(false)
+			}
+		}
+
+		load()
+	}, [page, isNewPortion, goodsData])
+
+	useEffect(() => {
+		const loaded = () => setIsLoaded(true)
+		loaded()
+	}, [])
+
+	useEffect(() => {
+		const update = () => {
+			setPage(1)
+			setTotalPages(1)
+			setIsNewPortion(true)
+		}
+
+		update()
+	}, [
+		priceFromDebounce,
+		priceToDebounce,
+		filterColor,
+		filterGender,
+		filterSizes,
+		filterCategory,
+	])
+
+	const loadMore = () => {
+		if (totalPages <= page) return
+		setPage(page + 1)
+		setIsNewPortion(true)
+	}
+
+	const checkIfAllDefault = () => {
+		return (
+			filterCategory === defaultFilterValues.category &&
+			priceFrom === defaultFilterValues.priceFrom &&
+			priceTo === defaultFilterValues.priceTo &&
+			filterColor === defaultFilterValues.color &&
+			filterGender === defaultFilterValues.gender &&
+			filterSizes === defaultFilterValues.sizes
+		)
+	}
+
+	const clearFilters = () => {
+		if (checkIfAllDefault()) return
+		setPage(1)
+		setTotalPages(1)
+		setGoods([])
+		setFilterCategory(defaultFilterValues.category)
+		setPriceFrom(defaultFilterValues.priceFrom)
+		setPriceTo(defaultFilterValues.priceTo)
+		setFilterColor(defaultFilterValues.color)
+		setFilterGender(defaultFilterValues.gender)
+		setFilterSizes(defaultFilterValues.sizes)
+	}
+
+	const setFilter = (name: string, value: unknown) => {
+		setPage(1)
+		setTotalPages(1)
+		setGoods([])
+		if (name === "category" && typeof value === "string") {
+			setFilterCategory(value)
+		}
+		if (name === "color" && typeof value === "string") {
+			setFilterColor(value)
+		}
+		if (name === "gender" && typeof value === "string") {
+			setFilterGender(value)
+		}
+		if (name === "sizes" && typeof value === "string") {
+			if (filterSizes.length === 0) {
+				if (filterSizes.includes(value)) {
+					setFilterSizes(defaultFilterValues.sizes)
+				} else {
+					setFilterSizes([value])
+				}
+			} else {
+				if (filterSizes.includes(value)) {
+					setFilterSizes(prev => prev.filter(size => size !== value))
+				} else {
+					setFilterSizes(prev => [...prev, value])
+				}
+			}
+		}
+		if (name === "sizes" && typeof value === "object") {
+			setFilterSizes(defaultFilterValues.sizes)
+		}
+	}
+
+	return (
+		<section className={`section ${css.goods}`}>
+			<div className="container">
+				<h1 className={css.h1}>Всі товари</h1>
+				<div className={css.blocks}>
+					<div>
+						<h2>
+							Фільтри
+							<button
+								type="button"
+								className={css.clear}
+								onClick={clearFilters}>
+								Очистити всі
+							</button>
+						</h2>
+						<span className={css.count}>
+							Показано {goods.length ? goods.length : "0"} з {totalGoods}
+						</span>
+						{categoriesData && (
+							<CategoriesFilter
+								defaultFilterValues={defaultFilterValues}
+								filterColor={filterColor}
+								filterSizes={filterSizes}
+								filterGender={filterGender}
+								filterCategory={filterCategory}
+								setFilter={setFilter}
+								priceFrom={priceFrom}
+								priceTo={priceTo}
+								setPriceFrom={setPriceFrom}
+								setPriceTo={setPriceTo}
+								categories={categoriesData.categories}
+							/>
+						)}
+					</div>
+					<div className={css.goodsBlock}>
+						{goods && totalGoods ? (
+							<GoodsList
+								sizes={
+									"(max-width: 768px) 335px, (max-width: 1439px) 198px, (min-width: 1440px) 304px"
+								}
+								goods={goods}
+								paginationClass={css.list}
+							/>
+						) : (
+							isLoaded && (
+								<MessageNoInfo
+									text="За вашим запитом не знайдено жодних товарів, спробуйте змінити фільтри, або скинути їх"
+									buttonText="Скинути фільтри"
+									onClick={clearFilters}
+								/>
+							)
+						)}
+						{page < totalPages && (
+							<button type="button" className={css.button} onClick={loadMore}>
+								Показати більше
+							</button>
+						)}
+					</div>
+				</div>
+			</div>
+		</section>
+	)
 }

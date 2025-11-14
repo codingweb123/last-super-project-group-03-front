@@ -1,6 +1,6 @@
 import css from "./PopularCategories.module.css"
 import Link from "next/link"
-import { Routes } from "@/config/config"
+import { Cache, Routes } from "@/config/config"
 import {
 	dehydrate,
 	HydrationBoundary,
@@ -14,7 +14,7 @@ export default async function PopularCategories() {
 	await queryClient.prefetchQuery({
 		queryKey: ["popularCategories", { page: 1 }],
 		queryFn: () => getCategories({ page: 1 }),
-		staleTime: 15 * 60 * 1000,
+		staleTime: Cache.Time,
 	})
 
 	return (

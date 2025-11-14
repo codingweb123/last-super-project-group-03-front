@@ -9,6 +9,10 @@ export const enum Routes {
 	Profile = "/profile",
 }
 
+export const enum Cache {
+	Time = 15 * 60 * 1000,
+}
+
 export const enum Socials {
 	Facebook = "https://facebook.com/clothica",
 	Instagram = "https://instagram.com/clothica",

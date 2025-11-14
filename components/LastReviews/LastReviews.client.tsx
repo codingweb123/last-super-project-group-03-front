@@ -6,9 +6,10 @@ import css from "./LastReviews.module.css"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { Feedback } from "@/types/shop"
+import { Cache } from "@/config/config"
 
 export default function LastReviewsClient() {
-	const [totalPages, setTotalPages] = useState<number>(2)
+	const [totalPages, setTotalPages] = useState<number>(1)
 	const [page, setPage] = useState<number>(1)
 	const [feedbacks, setFeedbacks] = useState<Feedback[]>([])
 	const [isNewPortion, setIsNewPortion] = useState<boolean>(true)
@@ -16,7 +17,7 @@ export default function LastReviewsClient() {
 	const { data } = useQuery({
 		queryKey: ["lastFeedbacks", { page }],
 		queryFn: () => getFeedbacks({ page }),
-		staleTime: 15 * 60 * 1000,
+		staleTime: Cache.Time,
 		refetchOnMount: false,
 		enabled: isNewPortion,
 	})

@@ -14,6 +14,7 @@ import "swiper/css/pagination"
 interface Props {
 	isSwiper?: boolean
 	goods: Cloth[]
+	sizes?: string
 	paginationClass?: string
 	leftBtnClass?: string
 	rightBtnClass?: string
@@ -22,6 +23,7 @@ interface Props {
 export default function GoodsList({
 	isSwiper = false,
 	goods,
+	sizes,
 	paginationClass,
 	leftBtnClass,
 	rightBtnClass,
@@ -62,10 +64,10 @@ export default function GoodsList({
 			</Swiper>
 		</RunOnlyClient>
 	) : (
-		<ul className={css.swiper}>
+		<ul className={paginationClass ?? css.swiper}>
 			{goods.map(good => (
 				<li key={good._id}>
-					<GoodInfo good={good} />
+					<GoodInfo good={good} sizes={sizes} />
 				</li>
 			))}
 		</ul>

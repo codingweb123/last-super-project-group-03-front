@@ -8,10 +8,11 @@ import { Category } from "@/types/shop"
 import { useMediaQuery } from "react-responsive"
 import css from "./CategoriesPage.module.css"
 import CategoriesListFallback from "@/components/CategoriesListFallback/CategoriesListFallback"
+import { Cache } from "@/config/config"
 
 export default function CategoriesPage() {
 	const [page, setPage] = useState<number>(1)
-	const [totalPages, setTotalPages] = useState<number>(2)
+	const [totalPages, setTotalPages] = useState<number>(1)
 	const [isNewPortion, setIsNewPortion] = useState<boolean>(true)
 	const [categories, setCategories] = useState<Category[]>([])
 	const perPage = useMediaQuery({ query: "(min-width: 1440px)" }) ? 6 : 4
@@ -19,7 +20,7 @@ export default function CategoriesPage() {
 	const { data } = useQuery({
 		queryKey: ["categories", { page }],
 		queryFn: () => getCategories({ page, perPage }),
-		staleTime: 15 * 60 * 1000,
+		staleTime: Cache.Time,
 		refetchOnMount: false,
 		enabled: isNewPortion,
 	})
@@ -40,9 +41,7 @@ export default function CategoriesPage() {
 	}, [isNewPortion, data, page])
 
 	const loadMore = () => {
-		if (totalPages <= page) {
-			return
-		}
+		if (totalPages <= page) return
 
 		setPage(page + 1)
 		setIsNewPortion(true)

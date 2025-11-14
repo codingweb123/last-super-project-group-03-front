@@ -8,25 +8,30 @@ import css from "./GoodInfo.module.css"
 
 interface Props {
 	good: Cloth
+	sizes?: string
 }
 
-export default function GoodInfo({ good }: Props) {
+export default function GoodInfo({ good, sizes }: Props) {
 	return (
 		<>
 			<Image
 				src={good.image}
-				sizes="(max-width: 768px) 335px, (max-width: 1439px) 336px, (min-width: 1440px) 304px"
+				sizes={
+					sizes ??
+					"(max-width: 768px) 335px, (max-width: 1439px) 336px, (min-width: 1440px) 304px"
+				}
 				width={335}
 				height={412}
+				className={css.img}
 				alt={good.name}
 			/>
-			<h3>
+			<h3 className={css.h3}>
 				{good.name}
 				<span>
 					{good.price.value} {good.price.currency}
 				</span>
 			</h3>
-			<p>
+			<p className={css.p}>
 				<svg className="icon" width={16} height={16}>
 					<use href="/icons.svg#i-star-filled"></use>
 				</svg>
