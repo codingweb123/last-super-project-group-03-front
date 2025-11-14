@@ -40,7 +40,7 @@ export async function GET() {
 						cookieStore.set("refreshToken", parsed.refreshToken, options)
 					}
 				}
-
+				
 				return NextResponse.json({ success: true }, { status: 200 })
 			}
 
@@ -49,6 +49,6 @@ export async function GET() {
 
 		return NextResponse.json({ success: false }, { status: 200 })
 	} catch {
-		return NextResponse.json({ success: true }, { status: 200 })
+		return NextResponse.json({ success: false }, { status: 200 })
 	}
 }

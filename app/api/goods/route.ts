@@ -8,7 +8,8 @@ export async function GET(request: NextRequest) {
 		const sizes = query.get("sizes")
 		const price = query.get("price")
 		const color = query.get("color")
-		const sex = query.get("sex")
+		const gender = query.get("gender")
+		const sort = query.get("sort")
 		const page = query.get("page") ?? 1
 		const perPage = query.get("perPage") ?? 8
 		const { data } = await api.get("/goods", {
@@ -17,7 +18,8 @@ export async function GET(request: NextRequest) {
 				...(sizes && { sizes }),
 				...(price && { price }),
 				...(color && { color }),
-				...(sex && { sex }),
+				...(gender && { gender }),
+				...(sort && { sort }),
 				...(page && { page }),
 				...(perPage && { perPage }),
 			},
