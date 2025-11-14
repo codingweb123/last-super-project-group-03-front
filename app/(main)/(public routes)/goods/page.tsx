@@ -11,6 +11,8 @@ import { useMediaQuery } from "react-responsive"
 import MessageNoInfo from "@/components/MessageNoInfo/MessageNoInfo"
 import css from "./GoodsPage.module.css"
 import { useDebounce } from "use-debounce"
+import GoodsListFallback from "@/components/GoodsListFallback/GoodsListFallback"
+import CategoriesListFallback from "@/components/CategoriesListFallback/CategoriesListFallback"
 
 export interface FilterValues {
 	color: Color | string
@@ -195,12 +197,49 @@ export default function GoodsPage({ category }: Props) {
 		}
 	}
 
+	if (isNewPortion && page === 1) {
+		return (
+			<section className={`section ${css.goods}`}>
+				<div className="container">
+					<h1 className={css.h1}>Всі товари</h1>
+					<div className={css.blocks}>
+						<div className={css.filtersBlock}>
+							<h2>
+								Фільтри
+								<button
+									type="button"
+									className={css.clear}
+									onClick={clearFilters}>
+									Очистити всі
+								</button>
+							</h2>
+							<span className={css.count}>
+								Показано {goods.length} з {totalGoods}
+							</span>
+							<div className={css.filters}>
+								<p className={css.select} aria-label="Open filters">
+									Фільтри
+									<svg className="icon" width={24} height={24}>
+										<use href="/icons.svg#i-chevron"></use>
+									</svg>
+								</p>
+							</div>
+						</div>
+						<div className={css.goodsBlock}>
+							<CategoriesListFallback length={12} />
+						</div>
+					</div>
+				</div>
+			</section>
+		)
+	}
+
 	return (
 		<section className={`section ${css.goods}`}>
 			<div className="container">
 				<h1 className={css.h1}>Всі товари</h1>
 				<div className={css.blocks}>
-					<div>
+					<div className={css.filtersBlock}>
 						<h2>
 							Фільтри
 							<button
@@ -211,7 +250,7 @@ export default function GoodsPage({ category }: Props) {
 							</button>
 						</h2>
 						<span className={css.count}>
-							Показано {goods.length ? goods.length : "0"} з {totalGoods}
+							Показано {goods.length} з {totalGoods}
 						</span>
 						{categoriesData && (
 							<CategoriesFilter
