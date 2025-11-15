@@ -1,122 +1,94 @@
-"use client"
+'use client'
 
-import { getSingleGood } from "@/lib/api/clientApi"
-import { useBasketStore } from "@/lib/stores/basketStore"
-import { useQueries } from "@tanstack/react-query"
-import Image from "next/image"
-import css from "./GoodsOrderList.module.css"
+import { useBasketStore } from '@/lib/stores/basketStore';
+import css from './GoodsOrderList.module.css';
+import Image from 'next/image';
+import { useState } from 'react';
 
 export default function GoodsOrderList() {
-	const basket = useBasketStore(state => state.basket)
-	const setBasket = useBasketStore(state => state.setBasket)
+    const basket = useBasketStore(state => state.basket);
+    const setBasket = useBasketStore(state => state.setBasket);
 
-	const goods = useQueries({
-		queries: basket.map(good => ({
-			queryKey: ["basket", { id: good.id, color: good.color, size: good.size }],
-			queryFn: () => getSingleGood(good.id),
-			refetchOnMount: false,
-			staleTime: 24 * 60 * 60 * 1000,
-		})),
-	})
+    const [quantity, setQuantity] = useState<{ [key: string]: number }>(() => {
+        const initialQuantity: { [key: string]: number } = {};
+        basket.forEach(good => {
+            initialQuantity[good.id] = 1;
+        });
+        return initialQuantity;
+    });
 
-	const sum = goods.reduce(
-		(acc, good, index) =>
-			(acc += (good.data?.price.value ?? 0) * basket[index].amount),
-		0
-	)
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const id = event.target.name;
+        const value = Number(event.target.value);
+        setQuantity((good) => ({ ...good, [id]: Math.max(1, value) }))
+    };
 
-	const changeBasketAmount = (
-		e: React.ChangeEvent<HTMLInputElement>,
-		index: number
-	) => {
-		const target = e.currentTarget
-		const value = parseInt(target.value)
+    const handleRemoveGood = (id: string) => {
+        setBasket(basket.filter(good => good.id !== id));
+    }
+    
+    const totalSum = basket.reduce((acc, good) => acc + good.price * (quantity[good.id] || 1), 0);
 
-		if (!value || value < 1 || value > 99) {
-			return
-		}
-
-		const newBasket = [...basket]
-
-		newBasket[index] = {
-			...newBasket[index],
-			amount: value,
-		}
-
-		setBasket(newBasket)
-	}
-
-	const removeFromBasket = (index: number) => {
-		const newBasket = basket.filter((_, sid) => sid != index)
-		setBasket(newBasket)
-	}
-
-	return (
-		goods && (
-			<>
-				<ul>
-					{goods.map(
-						({ data: good }, index) =>
-							good && (
-								<li key={good._id} className={css.good}>
-									<Image
-										src={good.image}
-										width={82}
-										height={101}
-										className={css.image}
-										alt={good.name}
-									/>
-									<div
-										aria-label="Cloth from basket information"
-										className={css.goodInfo}>
-										<h3 className={css.name}>
-											{good.name}
-											<p>
-												<svg className="icon" width={16} height={16}>
-													<use href="/icons.svg#i-star-filled"></use>
-												</svg>
-												{good.stars}
-												<span>
-													<svg className="icon" width={16} height={16}>
-														<use href="/icons.svg#i-comment"></use>
-													</svg>
-													{good.feedbacks.length}
-												</span>
-											</p>
-										</h3>
-										<div className={css.priceAmountDelete}>
-											<p>{good.price.value} грн</p>
-											<input
-												type="number"
-												min={1}
-												max={99}
-												onChange={e => changeBasketAmount(e, index)}
-												value={basket[index].amount}
-											/>
-											<button
-												type="button"
-												onClick={() => removeFromBasket(index)}>
-												<svg className="icon" width={24} height={24}>
-													<use href="/icons.svg#i-trash"></use>
-												</svg>
-											</button>
-										</div>
-									</div>
-								</li>
-							)
-					)}
-				</ul>
-				<hr className={css.hr} />
-				<p className={css.sumBefore}>
-					Проміжний підсумок
-					<span>{sum} грн</span>
-				</p>
-				<p className={css.delivery}>Доставка</p>
-				<p className={css.sum}>
-					Всього
-					<span>{sum} грн</span>
-				</p>
-			</>
-		)
-	)
+    return <>
+        <ul className={css.goodsList}>
+            {basket.map((good)=>
+            <li className={css.goodCard} key={good.id}>
+                    <Image
+                        src={good.image}
+                        width={82}
+                        height={101}
+                        alt={good.name}
+                        className={css.image}
+                    />
+                    <div className={css.contentBox}>
+                        <div className={css.goodInfo}>
+                            <div className={css.headingBox}>
+                                <h2 className={css.goodName}>{good.name}</h2>
+                                <div className={css.reviewsContainer}>
+                                    <div className={css.reviewBox}>
+                                        <svg width={16} height={16}>
+                                            <use href='/icons.svg#i-star-filled'></use>
+                                        </svg>
+                                        <p className={css.stars}>{good.rating}</p>
+                                    </div>
+                                    <div className={css.reviewBox}>
+                                        <svg width={16} height={16}>
+                                            <use href='/icons.svg#i-comment'></use>
+                                        </svg>
+                                        <p className={css.comments}>{good.reviews}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <p className={css.price}>{good.price} грн</p>
+                        </div>
+                        <div className={css.goodNav}>
+                            <input
+                                className={css.quantity}
+                                type="number"
+                                min={1}
+                                name={good.id}
+                                value={quantity[good.id] || 1}
+                                onChange={(e) => handleChange(e)} />
+                            <button className={css.trashBtn} onClick={()=>handleRemoveGood(good._id)}>
+                                <svg width={24} height={24}>
+                                    <use href='/icons.svg#i-trash'></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+            </li>
+            )}
+        </ul>
+        <div className={css.totalBox}>
+            <div className={css.goodsSum}>
+                <p className={css.sumTitle}>Проміжний підсумок</p>
+                <p className={css.sum}>{totalSum}</p>
+            </div>
+            <p className={css.delivery}>Доставка</p>
+            <div className={css.goodsTotalSum}>
+                <p className={css.totalTitle}>Всього</p>
+                <p className={css.totalSum}>{totalSum}</p>
+            </div>
+        </div>
+    </>
 }
