@@ -3,36 +3,43 @@
 import { useBasketStore } from '@/lib/stores/basketStore';
 import css from './GoodsOrderList.module.css';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useQueries } from '@tanstack/react-query';
+import {getSingleGood} from '@/lib/api/clientApi';
 
 export default function GoodsOrderList() {
     const basket = useBasketStore(state => state.basket);
     const setBasket = useBasketStore(state => state.setBasket);
 
-    const [quantity, setQuantity] = useState<{ [key: string]: number }>(() => {
-        const initialQuantity: { [key: string]: number } = {};
-        basket.forEach(good => {
-            initialQuantity[good.id] = 1;
-        });
-        return initialQuantity;
+    const goodsQuery = useQueries({
+        queries: basket.map((good) => ({
+            queryKey: ['good', good.id],
+            queryFn: () => getSingleGood(good.id),
+        })),
     });
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const id = event.target.name;
-        const value = Number(event.target.value);
-        setQuantity((good) => ({ ...good, [id]: Math.max(1, value) }))
-    };
+    const fullBasket = basket.map((good, i) => {
+        const fullData = goodsQuery[i].data;
+        return {
+            ...good,
+            ...fullData
+        }
+    });
+
+    const handleChange = (id: string, newAmount: number) => {
+        setBasket(basket.map((good) =>
+        good.id===id ? {...good, amount: newAmount}: good))
+    }
 
     const handleRemoveGood = (id: string) => {
         setBasket(basket.filter(good => good.id !== id));
     }
     
-    const totalSum = basket.reduce((acc, good) => acc + good.price * (quantity[good.id] || 1), 0);
+    const totalSum = fullBasket.reduce((acc, good) => acc + good.price?.value * good.amount, 0);
 
     return <>
         <ul className={css.goodsList}>
-            {basket.map((good)=>
-            <li className={css.goodCard} key={good.id}>
+            {fullBasket.map((good)=>
+            <li className={css.goodCard} key={good._id}>
                     <Image
                         src={good.image}
                         width={82}
@@ -49,27 +56,27 @@ export default function GoodsOrderList() {
                                         <svg width={16} height={16}>
                                             <use href='/icons.svg#i-star-filled'></use>
                                         </svg>
-                                        <p className={css.stars}>{good.rating}</p>
+                                        <p className={css.stars}>{good.stars}</p>
                                     </div>
                                     <div className={css.reviewBox}>
                                         <svg width={16} height={16}>
                                             <use href='/icons.svg#i-comment'></use>
                                         </svg>
-                                        <p className={css.comments}>{good.reviews}</p>
+                                        <p className={css.comments}>{good.feedbacks}</p>
                                     </div>
                                 </div>
                             </div>
-                            <p className={css.price}>{good.price} грн</p>
+                            <p className={css.price}>{good.price?.value} грн</p>
                         </div>
                         <div className={css.goodNav}>
                             <input
                                 className={css.quantity}
                                 type="number"
                                 min={1}
-                                name={good.id}
-                                value={quantity[good.id] || 1}
-                                onChange={(e) => handleChange(e)} />
-                            <button className={css.trashBtn} onClick={()=>handleRemoveGood(good._id)}>
+                                name={good?._id}
+                                value= {good.amount}
+                                onChange={(e) => handleChange(good.id, Number(e.target.value))} />
+                            <button className={css.trashBtn} onClick={()=>handleRemoveGood(good.id)}>
                                 <svg width={24} height={24}>
                                     <use href='/icons.svg#i-trash'></use>
                                 </svg>
