@@ -6,7 +6,7 @@ import { useQueries } from "@tanstack/react-query"
 import Image from "next/image"
 import css from "./GoodsOrderList.module.css"
 
-export default function GoodsOrderList() {
+export default function GoodsOrderList({ isModal }: { isModal?: boolean }) {
 	const basket = useBasketStore(state => state.basket)
 	const setBasket = useBasketStore(state => state.setBasket)
 
@@ -54,7 +54,7 @@ export default function GoodsOrderList() {
 	return (
 		goods && (
 			<>
-				<ul>
+				<ul className={isModal ? css.modal : ""}>
 					{goods.map(
 						({ data: good }, index) =>
 							good && (
