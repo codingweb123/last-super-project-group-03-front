@@ -17,8 +17,15 @@ export default function GoodsOrderList() {
         })),
     });
 
+    const isLoading = goodsQuery.some(q => q.isLoading);
+    const hasNoData = goodsQuery.some(q => !q.data);
+    
+    if (isLoading || hasNoData) {
+        return <p>Loading...</p>;
+    };
+
     const fullBasket = basket.map((good, i) => {
-        const fullData = goodsQuery[i].data;
+        const fullData = goodsQuery[i].data!;
         return {
             ...good,
             ...fullData
@@ -62,7 +69,7 @@ export default function GoodsOrderList() {
                                         <svg width={16} height={16}>
                                             <use href='/icons.svg#i-comment'></use>
                                         </svg>
-                                        <p className={css.comments}>{good.feedbacks}</p>
+                                        <p className={css.comments}>{good.feedbacks.length}</p>
                                     </div>
                                 </div>
                             </div>
