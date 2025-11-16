@@ -10,8 +10,8 @@ import { Routes } from "@/config/config"
 import Link from "next/link"
 
 export default function BasketModal() {
-	const router = useRouter()
-	const onClose = () => router.back()
+    const router = useRouter()
+    const onClose = () => router.back()
 
 	const basket = useBasketStore(state => state.basket)
 
