@@ -1,109 +1,119 @@
+.modal {
+	width: 100%;
+	height: 100%;
+	padding: 40px 20px;
+}
+
 .container {
-    background-color: var(--color-deco-lightest);
-    padding: 40px 20px;
+	background-color: var(--color-deco-lightest);
 }
 
 .closeBtn {
-    width: 32px;
-    height: 32px;
-    background-color: transparent;
-    border: none;
-    margin-bottom: 24px;
-    cursor: pointer;
+	display: flex;
+	place-self: flex-end;
+	width: 32px;
+	height: 32px;
+	background-color: transparent;
+	border: none;
+	margin-bottom: 28px;
+	cursor: pointer;
 }
 
 .title {
-    font-family: var(--font-nunito-sans);
-    font-weight: 400;
-    font-size: 36px;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    text-align: center;
-    color: #000;
-    margin-bottom: 24px;
+	font-family: var(--font-nunito-sans);
+	font-weight: 400;
+	font-size: 36px;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	text-align: center;
+	color: #000;
+	margin-bottom: 24px;
 }
 
 .btnContainer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
-    gap: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin-top: 24px;
 }
 
-.btnContainer>button {
-    border-radius: 100px;
-    padding: 6px 12px;
-    width: 335px;
-    height: 36px;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 1.5;
-    color: #000;
-    cursor: pointer;
-    transition: background-color var(--transition), color var(--transition), border var(--transition);
+.btnContainer > a {
+	border-radius: 100px;
+	width: 342px;
+	padding: 6px 0;
+	margin: 0 auto;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 1.5;
+	color: #000;
+	text-align: center;
+	cursor: pointer;
+	transition:
+		background-color var(--transition),
+		color var(--transition),
+		border var(--transition);
 }
 
 .continueBtn {
-    border: 1px solid rgba(255, 255, 255, 0);
-    background-color: rgba(0, 0, 0, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0);
+	background-color: rgba(0, 0, 0, 0.05);
 }
 
 .continueBtn:hover,
 .continueBtn:focus {
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    background-color: rgba(0, 0, 0, 0.15);
+	border: 1px solid rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.15);
 }
 
 .continueBtn:active {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
+	background-color: rgba(0, 0, 0, 0.5);
+	color: #fff;
 }
 
 .orderBtn {
-    border: 1px solid #c5e1a5;
-    background-color: #c5e1a5;
-
+	border: 1px solid #c5e1a5;
+	background-color: #c5e1a5;
 }
 
 .orderBtn:hover,
 .orderBtn:focus {
-    border: 1px solid #4e5a42;
-    background-color: #9db484;
+	border: 1px solid #4e5a42;
+	background-color: #9db484;
 }
 
 .orderBtn:active {
-    background-color: #3b4331;
-    color: #fff;
+	background-color: #3b4331;
+	color: #fff;
 }
 
 @media screen and (min-width: 768px) {
-    .container {
-        padding: 40px 32px 16px;
-        width: 552px;
-    }
+	.modal {
+		position: absolute;
+		right: 0;
+		width: 552px;
+		padding: 40px 32px;
+	}
 
-    .btnContainer {
-        flex-direction: row;
-        gap: 24px;
-    }
+	.btnContainer {
+		flex-direction: row;
+		gap: 24px;
+	}
 
-    .btnContainer>button {
-        width: 232px;
-    }
+	.btnContainer > a {
+		width: 232px;
+	}
 }
 
 @media screen and (min-width: 1440px) {
-    .container {
-        padding: 40px 64px 16px 32px;
-        width: 589px;
-    }
+	.modal {
+		width: 589px;
+	}
 
-    .title {
-        font-size: 48px;
-    }
+	.title {
+		font-size: 48px;
+	}
 
-    .btnContainer>button {
-        width: 234px;
-    }
+	.btnContainer > a {
+		width: 234px;
+	}
 }

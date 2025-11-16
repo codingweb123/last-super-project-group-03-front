@@ -191,9 +191,24 @@
 	color: #000;
 }
 
+.modal {
+	max-height: 434px;
+	overflow-y: auto;
+}
+
+.modal .goodInfo {
+	width: 100%;
+}
+
 @media screen and (min-width: 768px) {
-	.goodsList {
-		width: 448px;
+	.modal {
+		max-height: 452px;
+	}
+	.goodInfo {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
 	}
 
 	.contentBox {
