@@ -14,8 +14,8 @@ export type Cloth = {
 	colors: Color[]
 	prevDescription: string
 	description: string
-	feedbacks: Feedback[]
-	stars: number
+	feedbacks: FeedbackWithGoodIdObject[]
+	stars: 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5
 	gender: "men" | "women" | "unisex"
 	characteristics: string[]
 }
@@ -36,8 +36,17 @@ export type Feedback = {
 	author: string
 	date: string
 	description: string
-	rate: number
-	goodId: Cloth
+	rate: 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5
+	goodId: string
+}
+
+type GoodId = {
+	_id: string,
+	name: string
+}
+
+export interface FeedbackWithGoodIdObject extends Omit<Feedback, "goodId"> {
+	goodId: GoodId
 }
 
 export type Category = {

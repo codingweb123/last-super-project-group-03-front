@@ -2,7 +2,7 @@ import { Color, Size } from "@/types/shop"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
-type BasketProduct = {
+export type BasketProduct = {
 	id: string
 	size: Size
 	color: Color
