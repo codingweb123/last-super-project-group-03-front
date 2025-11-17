@@ -6,13 +6,14 @@ import {
 import { getFeedbacks } from "@/lib/api/clientApi"
 import css from "./LastReviews.module.css"
 import LastReviewsClient from "./LastReviews.client"
+import { Cache } from "@/config/config"
 
 export default async function LastReviews() {
 	const queryClient = new QueryClient()
 	await queryClient.prefetchQuery({
 		queryKey: ["lastFeedbacks", { page: 1 }],
 		queryFn: () => getFeedbacks({}),
-		staleTime: 15 * 60 * 1000,
+		staleTime: Cache.Time,
 	})
 
 	return (

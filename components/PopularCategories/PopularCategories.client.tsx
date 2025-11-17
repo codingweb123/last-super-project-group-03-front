@@ -6,17 +6,18 @@ import { useEffect, useState } from "react"
 import { Category } from "@/types/shop"
 import CategoriesList from "../CategoriesList/CategoriesList"
 import css from "./PopularCategories.module.css"
+import { Cache } from "@/config/config"
 
 export default function PopularCategoriesClient() {
 	const [page, setPage] = useState<number>(1)
-	const [totalPages, setTotalPages] = useState<number>(2)
+	const [totalPages, setTotalPages] = useState<number>(1)
 	const [categories, setCategories] = useState<Category[]>([])
 	const [isNewPortion, setIsNewPortion] = useState<boolean>(true)
 
 	const { data } = useQuery({
 		queryKey: ["popularCategories", { page }],
 		queryFn: () => getCategories({ page }),
-		staleTime: 15 * 60 * 1000,
+		staleTime: Cache.Time,
 		refetchOnMount: false,
 		enabled: isNewPortion,
 	})

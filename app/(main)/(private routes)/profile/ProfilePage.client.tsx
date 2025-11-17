@@ -1,16 +1,15 @@
 "use client"
 
 import css from "./ProfilePage.module.css"
-
 import { useRouter } from "next/navigation"
-
+import toast from "react-hot-toast"
 import MessageNoInfo from "@/components/MessageNoInfo/MessageNoInfo"
 import UserInfoForm from "@/components/UserInfoForm/UserInfoForm"
 import { Routes } from "@/config/config"
-import { Order } from "@/types/shop"
-import toast from "react-hot-toast"
 import { logout } from "@/lib/api/clientApi"
 import { useAuthStore } from "@/lib/stores/authStore"
+import { useBasketStore } from "@/lib/stores/basketStore"
+import { Order } from "@/types/shop"
 
 interface Props {
 	ordersList: Order[]
@@ -19,15 +18,22 @@ interface Props {
 export default function ProfileClient({ ordersList }: Props) {
 	const router = useRouter()
 	const clearIsAuthenticated = useAuthStore(state => state.clearIsAuthenticated)
+	const clearBasket = useBasketStore(state => state.clearBasket)
 
-	const onLogout = async () => {
+	const handleLogout = async (): Promise<void> => {
 		try {
+			// Requests post on /auth/logout.
 			await logout()
+			// Clears user global state.
 			clearIsAuthenticated()
-			toast.success("Successfully logged out")
-			router.push(Routes.Home)
+			// Clears basket global state.
+			clearBasket()
+			// Notifies about successful logging out.
+			toast.success("Успішний вихід із профіля!")
+			router.push(Routes.Login)
 		} catch {
-			toast.error("Error while logging out...")
+			// Notifies about that something went wrong.
+			toast.error("Щось пішло не так під час виходу з профіля...")
 		}
 	}
 
@@ -97,7 +103,7 @@ export default function ProfileClient({ ordersList }: Props) {
 					)}
 				</div>
 			</div>
-			<button onClick={onLogout} className={css.logout} type="button">
+			<button className={css.logout} type="button" onClick={handleLogout}>
 				Вийти з кабінету
 			</button>
 		</div>

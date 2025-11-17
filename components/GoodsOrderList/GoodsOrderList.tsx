@@ -1,42 +1,47 @@
-"use client"
+'use client'
 
-import { getSingleGood } from "@/lib/api/clientApi"
-import { useBasketStore } from "@/lib/stores/basketStore"
-import { useQueries } from "@tanstack/react-query"
-import Image from "next/image"
-import css from "./GoodsOrderList.module.css"
+import { useBasketStore } from '@/lib/stores/basketStore';
+import css from './GoodsOrderList.module.css';
+import Image from 'next/image';
+import { useQueries } from '@tanstack/react-query';
+import {getSingleGood} from '@/lib/api/clientApi';
 
-export default function GoodsOrderList() {
+export default function GoodsOrderList({ isModal }: { isModal?: boolean }) {
 	const basket = useBasketStore(state => state.basket)
 	const setBasket = useBasketStore(state => state.setBasket)
 
-	const goods = useQueries({
-		queries: basket.map(good => ({
-			queryKey: ["basket", { id: good.id, color: good.color, size: good.size }],
-			queryFn: () => getSingleGood(good.id),
-			refetchOnMount: false,
-			staleTime: 24 * 60 * 60 * 1000,
-		})),
-	})
+    const goodsQuery = useQueries({
+        queries: basket.map((good) => ({
+            queryKey: ['good', good.id],
+            queryFn: () => getSingleGood(good.id),
+        })),
+    });
 
-	const sum = goods.reduce(
-		(acc, good, index) =>
-			(acc += (good.data?.price.value ?? 0) * basket[index].amount),
-		0
-	)
+    const isLoading = goodsQuery.some(q => q.isLoading);
+    const hasNoData = goodsQuery.some(q => !q.data);
+    
+    if (isLoading || hasNoData) {
+        return <p>Loading...</p>;
+    };
 
-	const changeBasketAmount = (
-		e: React.ChangeEvent<HTMLInputElement>,
-		index: number
-	) => {
-		const target = e.currentTarget
-		const value = parseInt(target.value)
+    const fullBasket = basket.map((good, i) => {
+        const fullData = goodsQuery[i].data!;
+        return {
+            ...good,
+            ...fullData
+        }
+    });
 
-		if (!value || value < 1 || value > 99) {
-			return
-		}
+    const handleChange = (id: string, newAmount: number) => {
+        setBasket(basket.map((good) =>
+        good.id===id ? {...good, amount: newAmount}: good))
+    }
 
-		const newBasket = [...basket]
+    const handleRemoveGood = (id: string) => {
+        setBasket(basket.filter(good => good.id !== id));
+    }
+    
+    const totalSum = fullBasket.reduce((acc, good) => acc + good.price?.value * good.amount, 0);
 
 		newBasket[index] = {
 			...newBasket[index],
@@ -54,7 +59,7 @@ export default function GoodsOrderList() {
 	return (
 		goods && (
 			<>
-				<ul>
+				<ul className={isModal ? css.modal : ""}>
 					{goods.map(
 						({ data: good }, index) =>
 							good && (

@@ -6,17 +6,18 @@ import { useEffect, useState } from "react"
 import { Cloth } from "@/types/shop"
 import css from "./PopularGoods.module.css"
 import GoodsList from "../GoodsList/GoodsList"
+import { Cache } from "@/config/config"
 
 export default function PopularGoodsClient() {
 	const [page, setPage] = useState<number>(1)
-	const [totalPages, setTotalPages] = useState<number>(2)
+	const [totalPages, setTotalPages] = useState<number>(1)
 	const [goods, setGoods] = useState<Cloth[]>([])
 	const [isNewPortion, setIsNewPortion] = useState<boolean>(true)
 
 	const { data } = useQuery({
 		queryKey: ["popularGoods", { page }],
 		queryFn: () => getGoods({ page, sort: "desc" }),
-		staleTime: 15 * 60 * 1000,
+		staleTime: Cache.Time,
 		refetchOnMount: false,
 		enabled: isNewPortion,
 	})

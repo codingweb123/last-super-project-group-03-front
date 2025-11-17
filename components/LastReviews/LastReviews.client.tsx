@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 import { FeedbackWithGoodIdObject } from "@/types/shop"
 
 export default function LastReviewsClient() {
-	const [totalPages, setTotalPages] = useState<number>(2)
+	const [totalPages, setTotalPages] = useState<number>(1)
 	const [page, setPage] = useState<number>(1)
 	const [feedbacks, setFeedbacks] = useState<FeedbackWithGoodIdObject[]>([])
 	const [isNewPortion, setIsNewPortion] = useState<boolean>(true)
@@ -16,7 +16,7 @@ export default function LastReviewsClient() {
 	const { data } = useQuery({
 		queryKey: ["lastFeedbacks", { page }],
 		queryFn: () => getFeedbacks({ page }),
-		staleTime: 15 * 60 * 1000,
+		staleTime: Cache.Time,
 		refetchOnMount: false,
 		enabled: isNewPortion,
 	})
