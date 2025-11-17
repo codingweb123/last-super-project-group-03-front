@@ -28,10 +28,22 @@ export default function BasketModal() {
 					<>
 						<GoodsOrderList isModal={true} />
 						<div className={css.btnContainer}>
-							<Link className={css.continueBtn} href={Routes.Goods}>
+							<Link
+								className={css.continueBtn}
+								href={Routes.Goods}
+								onClick={() => {
+									onClose()
+									setTimeout(() => router.push(Routes.Goods))
+								}}>
 								Продовжити покупки
 							</Link>
-							<Link className={css.orderBtn} href={Routes.Order}>
+							<Link
+								className={css.orderBtn}
+								href={Routes.Order}
+								onClick={() => {
+									onClose()
+									setTimeout(() => router.push(Routes.Order))
+								}}>
 								Оформити замовлення
 							</Link>
 						</div>
@@ -40,7 +52,10 @@ export default function BasketModal() {
 					<MessageNoInfo
 						text="Ваш кошик порожній, мершій до покупок!"
 						buttonText="До покупок"
-						onClick={() => router.push(Routes.Goods)}
+						onClick={() => {
+							onClose()
+							setTimeout(() => router.push(Routes.Goods))
+						}}
 					/>
 				)}
 			</div>

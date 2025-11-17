@@ -88,9 +88,9 @@
 
 @media screen and (min-width: 768px) {
 	.modal {
-		position: absolute;
+		position: absolute !important;
 		right: 0;
-		width: 552px;
+		width: 552px !important;
 		padding: 40px 32px;
 	}
 
@@ -106,7 +106,7 @@
 
 @media screen and (min-width: 1440px) {
 	.modal {
-		width: 589px;
+		width: 589px !important;
 	}
 
 	.title {
