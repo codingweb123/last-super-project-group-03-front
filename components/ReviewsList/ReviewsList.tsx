@@ -1,7 +1,6 @@
 "use client"
 
 import { Keyboard, Navigation } from "swiper/modules"
-import { Feedback } from "@/types/shop"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Routes } from "@/config/config"
 import RunOnlyClient from "../RunOnlyClient/RunOnlyClient"
@@ -10,9 +9,10 @@ import css from "./ReviewsList.module.css"
 import "swiper/css"
 import "swiper/css/navigation"
 import ReviewsListFallback from "../ReviewsListFallback/ReviewsListFallback"
+import { FeedbackWithGoodIdObject } from "@/types/shop"
 
 interface Props {
-	feedbacks: Feedback[]
+	feedbacks: FeedbackWithGoodIdObject[]
 	leftBtnClass?: string
 	rightBtnClass?: string
 }

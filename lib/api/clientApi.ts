@@ -4,6 +4,7 @@ import {
 	Category,
 	Cloth,
 	Feedback,
+	FeedbackWithGoodIdObject,
 	Order,
 	OrderUserData,
 	Status,
@@ -52,7 +53,7 @@ type GetFeedbacks = Partial<{
 type FeedbacksResponse = Promise<
 	Paginated & {
 		totalFeedbacks: number
-		feedbacks: Feedback[]
+		feedbacks: FeedbackWithGoodIdObject[]
 	}
 >
 

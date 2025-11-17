@@ -11,7 +11,6 @@ import { useMediaQuery } from "react-responsive"
 import MessageNoInfo from "@/components/MessageNoInfo/MessageNoInfo"
 import css from "./GoodsPage.module.css"
 import { useDebounce } from "use-debounce"
-import GoodsListFallback from "@/components/GoodsListFallback/GoodsListFallback"
 import CategoriesListFallback from "@/components/CategoriesListFallback/CategoriesListFallback"
 
 export interface FilterValues {
@@ -197,7 +196,7 @@ export default function GoodsPage({ category }: Props) {
 		}
 	}
 
-	if (isNewPortion && page === 1) {
+	if (!isLoaded) {
 		return (
 			<section className={`section ${css.goods}`}>
 				<div className="container">

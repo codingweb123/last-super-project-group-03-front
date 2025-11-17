@@ -1,194 +1,122 @@
-.goodsList {
-	display: flex;
-	align-items: center;
-	justify-content: flex-start;
-	flex-direction: column;
-	gap: 16px;
-	width: 342px;
-	margin-bottom: 24px;
-}
-
-.goodCard {
-	display: flex;
-	align-items: center;
-	justify-content: flex-start;
-	flex-direction: row;
-	gap: 24px;
-}
-
-.image {
-	border-radius: 16px;
-}
-
-.contentBox {
-	display: flex;
-	align-items: flex-start;
-	justify-content: center;
-	flex-direction: column;
-	gap: 8px;
-	width: 236px;
-}
-
-.goodInfo {
-	display: flex;
-	align-items: flex-start;
-	justify-content: flex-start;
-	flex-direction: column;
-	gap: 8px;
-}
-
-.headingBox {
-	display: flex;
-	align-items: flex-start;
-	justify-content: flex-start;
-	flex-direction: column;
-	gap: 0px;
-	width: 205px;
-}
-
-.name {
-	font-weight: 600;
-	font-size: 18px;
-	line-height: 1.5;
-	color: #000;
-}
-
-.reviewsContainer {
-	display: flex;
-	align-items: flex-start;
-	justify-content: flex-start;
-	flex-direction: row;
-	gap: 12px;
-}
-
-.reviewBox {
-	display: flex;
-	align-items: center;
-	justify-content: flex-start;
-	flex-direction: row;
-	gap: 4px;
-	width: 28px;
-	height: 18px;
-}
-
-.stars {
-	font-weight: 400;
-	font-size: 12px;
-	line-height: 1.5;
-	color: #000;
-}
-
-.comments {
-	font-weight: 400;
-	font-size: 12px;
-	line-height: 1.5;
-	color: #000;
-}
-
-.price {
-	font-weight: 400;
-	font-size: 16px;
-	line-height: 1.5;
-	color: #000;
-}
-
-.goodNav {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	flex-direction: row;
-	width: 236px;
-}
-
-.quantity {
-	border: 1px solid rgba(0, 0, 0, 0.15);
-	border-radius: 16px;
-	padding: 8px;
-	width: 64px;
-	height: 40px;
-	font-weight: 400;
-	font-size: 16px;
-	line-height: 1.5;
-	color: #000;
-}
-
-.trashBtn {
-	border: 1px solid rgba(255, 255, 255, 0);
-	border-radius: 100px;
-	padding: 4px;
-	width: 40px;
-	height: 40px;
-	background-color: rgba(0, 0, 0, 0.05);
-	cursor: pointer;
-}
-
-.totalBox {
+.hr {
+	display: block;
+	border: 0;
 	width: 100%;
-	display: flex;
-	align-items: flex-start;
-	justify-content: center;
-	flex-direction: column;
-	gap: 0px;
-	margin-bottom: 24px;
+	height: 1px;
+	color: unset;
+	margin-top: 16px;
+	margin-bottom: 14px;
+	background-color: var(--color-scheme-1-border);
 }
 
-.goodsSum {
-	display: flex;
-	align-items: flex-start;
-	justify-content: space-between;
-	flex-direction: row;
-	gap: 0px;
-	border-top: 1px solid rgba(0, 0, 0, 0.2);
-	padding: 12px 0px 4px;
-	width: 342px;
-	height: 40px;
-}
-
-.sumTitle {
-	font-weight: 400;
+.sumBefore,
+.delivery {
 	font-size: 14px;
-	line-height: 1.5;
-	color: #000;
-}
-
-.sum {
 	font-weight: 400;
-	font-size: 16px;
 	line-height: 1.5;
-	color: #000;
 }
 
 .delivery {
-	font-weight: 400;
-	font-size: 14px;
-	line-height: 1.5;
-	color: #000;
-	text-align: left;
+	margin-top: 9px;
 }
 
-.goodsTotalSum {
-	padding: 12px 0px;
-	width: 342px;
-	height: 51px;
+.sumBefore,
+.sum {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.sum {
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.5;
+	margin-top: 16px;
+}
+
+.name {
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.5;
+}
+
+.name p {
 	display: flex;
 	align-items: center;
+	font-size: 12px;
+	font-weight: 400;
+}
+
+.name p svg {
+	margin-right: 4px;
+}
+
+.name p span {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-left: 12px;
+}
+
+.image {
+	width: 82px;
+	height: 101px;
+	border-radius: 16px;
+}
+
+.good {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	width: 100%;
+}
+
+.good:not(:first-child) {
+	margin-top: 16px;
+}
+
+.priceAmountDelete {
+	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
-	flex-direction: row;
-	gap: 0px;
+	row-gap: 8px;
+	margin-top: 8px;
 }
 
-.totalTitle {
-	font-weight: 600;
-	font-size: 18px;
-	line-height: 1.5;
-	color: #000;
-}
-
-.totalSum {
-	font-weight: 600;
+.priceAmountDelete p {
+	flex: 1 1 100%;
 	font-size: 16px;
+	font-weight: 400;
 	line-height: 1.5;
-	color: #000;
+}
+
+.priceAmountDelete input {
+	width: 64px;
+	height: 40px;
+	padding: 0 8px;
+	text-align: center;
+	border-radius: 16px;
+	border: 1px solid var(--opacity-neutral-darkest-15);
+	background-color: transparent;
+}
+
+.priceAmountDelete input::-webkit-outer-spin-button,
+.priceAmountDelete input::-webkit-inner-spin-button {
+	display: none;
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.priceAmountDelete button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+	border-radius: 100px;
+	border: 1px solid transparent;
+	background-color: var(--opacity-neutral-darkest-5);
 }
 
 .modal {
@@ -210,69 +138,14 @@
 		align-items: center;
 		width: 100%;
 	}
-
-	.contentBox {
+	.priceAmountDelete {
+		display: flex;
+		justify-content: flex-end;
 		align-items: center;
-		justify-content: flex-start;
-		flex-direction: row;
 		gap: 32px;
-		width: 382px;
+		width: 50%;
 	}
-
-	.goodInfo {
-		align-items: center;
-		flex-direction: row;
-		gap: 9px;
-	}
-
-	.headingBox {
-		width: 160px;
-	}
-
-	.goodNav {
-		justify-content: center;
-		flex-direction: row;
-		gap: 8px;
-		width: 112px;
-		height: 40px;
-	}
-
-	.goodsSum {
-		width: 488px;
-	}
-
-	.goodsTotalSum {
-		width: 488px;
-	}
-}
-
-@media screen and (min-width: 1440px) {
-	.goodsList {
-		width: 493px;
-	}
-
-	.contentBox {
-		width: 387px;
-	}
-
-	.goodInfo {
-		gap: 14px;
-	}
-
-	.headingBox {
-		width: 160px;
-	}
-
-	.totalBox {
-		align-items: flex-start;
-		justify-content: flex-start;
-	}
-
-	.goodsSum {
-		width: 493px;
-	}
-
-	.goodsTotalSum {
-		width: 493px;
+	.priceAmountDelete p {
+		flex: unset;
 	}
 }
