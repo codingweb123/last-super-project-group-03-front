@@ -97,7 +97,7 @@ export default function GoodForPurchase({ good }: Props) {
 					<svg className={css.chevron} width={16} height={16}>
 						<use href="/icons.svg#i-chevron"></use>
 					</svg>
-					<Link href={`${Routes.Categories}/${category._id}`}>
+					<Link href={`${Routes.Goods}/category/${category._id}`}>
 						{category.name}
 					</Link>
 					<svg className={css.chevron} width={16} height={16}>

@@ -9,6 +9,8 @@ import css from "./CategoriesList.module.css"
 import CategoriesListFallback from "../CategoriesListFallback/CategoriesListFallback"
 import "swiper/css"
 import "swiper/css/navigation"
+import { Routes } from "@/config/config"
+import Link from "next/link"
 
 interface Props {
 	isSwiper?: boolean
@@ -59,7 +61,9 @@ export default function CategoriesList({
 							height={223}
 							alt={category.name}
 						/>
-						<h3>{category.name}</h3>
+						<Link href={`${Routes.Goods}/category/${category._id}`}>
+							{category.name}
+						</Link>
 					</SwiperSlide>
 				))}
 			</Swiper>
@@ -75,7 +79,9 @@ export default function CategoriesList({
 						height={223}
 						alt={category.name}
 					/>
-					<h3>{category.name}</h3>
+					<Link href={`${Routes.Goods}/category/${category._id}`}>
+						{category.name}
+					</Link>
 				</li>
 			))}
 		</ul>

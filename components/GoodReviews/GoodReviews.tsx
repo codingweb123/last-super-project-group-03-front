@@ -53,9 +53,7 @@ interface Props {
 
 export default function GoodReviews({ feedbacks, goodId }: Props) {
 	const formId: string = useId();
-
 	const [isModal, setModal] = useState<boolean>(false);
-
 	const [checkedStar, setCheckedStar] = useState<number>(0);
 
 	const checkStars = (checkedStar: number, checkOn: number): string => {
