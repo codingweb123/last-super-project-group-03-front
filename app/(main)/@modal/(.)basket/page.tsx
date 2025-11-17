@@ -10,8 +10,8 @@ import { Routes } from "@/config/config"
 import Link from "next/link"
 
 export default function BasketModal() {
-    const router = useRouter()
-    const onClose = () => router.back()
+	const router = useRouter()
+	const onClose = () => router.back()
 
 	const basket = useBasketStore(state => state.basket)
 
@@ -28,16 +28,10 @@ export default function BasketModal() {
 					<>
 						<GoodsOrderList isModal={true} />
 						<div className={css.btnContainer}>
-							<Link
-								className={css.continueBtn}
-								href={Routes.Goods}
-								onClick={onClose}>
+							<Link className={css.continueBtn} href={Routes.Goods}>
 								Продовжити покупки
 							</Link>
-							<Link
-								className={css.orderBtn}
-								href={Routes.Order}
-								onClick={onClose}>
+							<Link className={css.orderBtn} href={Routes.Order}>
 								Оформити замовлення
 							</Link>
 						</div>
@@ -46,10 +40,7 @@ export default function BasketModal() {
 					<MessageNoInfo
 						text="Ваш кошик порожній, мершій до покупок!"
 						buttonText="До покупок"
-						onClick={() => {
-							onClose()
-							router.push(Routes.Goods)
-						}}
+						onClick={() => router.push(Routes.Goods)}
 					/>
 				)}
 			</div>
