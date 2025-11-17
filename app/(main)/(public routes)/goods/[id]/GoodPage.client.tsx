@@ -1,3 +1,5 @@
+// app/(public routes)/goods/[id]/GoodPage.client.tsx
+
 "use client"
 
 import { useRouter } from "next/navigation"
