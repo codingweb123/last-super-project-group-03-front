@@ -1,3 +1,5 @@
+// app/(public routes)/goods/[id]/page.tsx
+
 import {
 	QueryClient,
 	HydrationBoundary,

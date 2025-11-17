@@ -1,3 +1,5 @@
+// components/GoodForPurchase/GoodForPurchase.tsx 
+
 "use client"
 
 import { useId } from "react"
