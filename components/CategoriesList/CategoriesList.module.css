@@ -5,6 +5,7 @@
 .swiper img {
 	width: 335px;
 	height: 223px;
+	cursor: pointer;
 	border-radius: 16px;
 }
 

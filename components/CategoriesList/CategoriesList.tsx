@@ -11,6 +11,7 @@ import "swiper/css"
 import "swiper/css/navigation"
 import { Routes } from "@/config/config"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 interface Props {
 	isSwiper?: boolean
@@ -29,6 +30,8 @@ export default function CategoriesList({
 	leftBtnClass,
 	rightBtnClass,
 }: Props) {
+	const router = useRouter()
+
 	return isSwiper ? (
 		<RunOnlyClient fallback={<CategoriesListFallback length={3} />}>
 			<Swiper
@@ -59,6 +62,9 @@ export default function CategoriesList({
 							sizes="(max-width: 768px) 335px, (max-width: 1439px) 336px, (min-width: 1440px) 416px"
 							width={335}
 							height={223}
+							onClick={() =>
+								router.push(`${Routes.Goods}/category/${category._id}`)
+							}
 							alt={category.name}
 						/>
 						<Link href={`${Routes.Goods}/category/${category._id}`}>
@@ -77,6 +83,9 @@ export default function CategoriesList({
 						sizes="(max-width: 768px) 335px, (max-width: 1439px) 336px, (min-width: 1440px) 416px"
 						width={335}
 						height={223}
+						onClick={() =>
+							router.push(`${Routes.Goods}/category/${category._id}`)
+						}
 						alt={category.name}
 					/>
 					<Link href={`${Routes.Goods}/category/${category._id}`}>
