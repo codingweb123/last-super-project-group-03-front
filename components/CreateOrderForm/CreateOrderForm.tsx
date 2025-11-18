@@ -11,7 +11,6 @@ import css from "./CreateOrderForm.module.css"
 import { useBasketStore } from "@/lib/stores/basketStore"
 import { redirect, RedirectType } from "next/navigation"
 import { Routes } from "@/config/config"
-import { isAxiosError } from "axios"
 
 type CreateOrderData = OrderUserData & { comment: string }
 
@@ -68,7 +67,7 @@ export default function CreateOrderForm() {
 	}, [basket])
 
 	if (isLoaded && basket.length === 0) {
-		redirect(Routes.Home)
+		redirect(Routes.Profile, RedirectType.push)
 	}
 
 	const initialValues: CreateOrderData = {
@@ -109,7 +108,6 @@ export default function CreateOrderForm() {
 			.replace(") ", "")
 			.replace(/-/g, "")
 
-		console.log(basket)
 		actions.resetForm()
 
 		const orderData: OrderData = {
@@ -130,16 +128,13 @@ export default function CreateOrderForm() {
 			} else {
 				await createOrder(orderData)
 			}
-		} catch (error) {
-			if (isAxiosError(error)) {
-				toast.error("Error while creating order;" + error.message)
-			}
+		} catch {
+			toast.error("Error while creating order")
 			return
 		}
 
-		clearBasket()
 		toast.success("Order was successfully created")
-		redirect(user ? Routes.Profile : Routes.Home, RedirectType.push)
+		clearBasket()
 	}
 
 	return (

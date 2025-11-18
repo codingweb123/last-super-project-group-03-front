@@ -50,6 +50,9 @@ export default function GoodsPage({ category }: Props) {
 	const [filterCategory, setFilterCategory] = useState<Category["_id"] | "all">(
 		category ?? defaultFilterValues.category
 	)
+	const [currentCategory, setCurrentCategory] = useState<string>(
+		defaultFilterValues.category
+	)
 	const [filterSizes, setFilterSizes] = useState<string[]>(
 		defaultFilterValues.sizes
 	)
@@ -101,6 +104,10 @@ export default function GoodsPage({ category }: Props) {
 					setGoods(goodsData.goods)
 					setTotalPages(goodsData.totalPages)
 					setTotalGoods(goodsData.totalGoods)
+					if (filterCategory != "all")
+						setCurrentCategory(goodsData.goods?.[0].category.name ?? "all")
+					if (goodsData.goods?.[0].category.name === "Усі")
+						setCurrentCategory("all")
 				} else {
 					setGoods(prev => [...prev, ...goodsData.goods])
 				}
@@ -109,7 +116,7 @@ export default function GoodsPage({ category }: Props) {
 		}
 
 		load()
-	}, [page, isNewPortion, goodsData])
+	}, [page, isNewPortion, goodsData, filterCategory])
 
 	useEffect(() => {
 		const loaded = () => setIsLoaded(true)
@@ -155,6 +162,7 @@ export default function GoodsPage({ category }: Props) {
 		setPage(1)
 		setTotalPages(1)
 		setGoods([])
+		setCurrentCategory(defaultFilterValues.category)
 		setFilterCategory(defaultFilterValues.category)
 		setPriceFrom(defaultFilterValues.priceFrom)
 		setPriceTo(defaultFilterValues.priceTo)
@@ -167,8 +175,10 @@ export default function GoodsPage({ category }: Props) {
 		setPage(1)
 		setTotalPages(1)
 		setGoods([])
-		if (name === "category" && typeof value === "string") {
-			setFilterCategory(value)
+		if (name === "category" && Array.isArray(value)) {
+			setFilterCategory(value[0])
+			if (value[1] === "Усі") setCurrentCategory(defaultFilterValues.category)
+			else setCurrentCategory(value[1])
 		}
 		if (name === "color" && typeof value === "string") {
 			setFilterColor(value)
@@ -236,7 +246,9 @@ export default function GoodsPage({ category }: Props) {
 	return (
 		<section className={`section ${css.goods}`}>
 			<div className="container">
-				<h1 className={css.h1}>Всі товари</h1>
+				<h1 className={css.h1}>
+					{currentCategory === "all" ? "Всі товари" : currentCategory}
+				</h1>
 				<div className={css.blocks}>
 					<div className={css.filtersBlock}>
 						<h2>

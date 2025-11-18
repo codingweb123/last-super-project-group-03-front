@@ -18,7 +18,7 @@
 	margin-bottom: 16px;
 }
 
-.goods h3 {
+.filtersBlock h3 {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -29,7 +29,7 @@
 	margin-bottom: 20px;
 }
 
-.goods h3 > button {
+.filtersBlock h3 > button {
 	font-size: 16px;
 	line-height: 1.5;
 	cursor: pointer;

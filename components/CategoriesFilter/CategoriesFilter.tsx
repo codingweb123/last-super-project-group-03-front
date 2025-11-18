@@ -103,7 +103,9 @@ export default function CategoriesFilter({
 								<li key={category._id}>
 									<button
 										type="button"
-										onClick={() => setFilter("category", category._id)}
+										onClick={() =>
+											setFilter("category", [category._id, category.name])
+										}
 										disabled={category._id === filterCategory}
 										className={
 											category._id === filterCategory ? css.filterActive : ""

@@ -2,7 +2,7 @@
 
 import AuthNavigation from "@/components/AuthNavigation/AuthNavigation"
 import { Routes } from "@/config/config"
-import { Formik, Form, FormikHelpers, Field, ErrorMessage } from "formik"
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik"
 import { login, LoginRequest } from "@/lib/api/clientApi"
 import { useMutation } from "@tanstack/react-query"
 import { useAuthStore } from "@/lib/stores/authStore"
@@ -20,6 +20,13 @@ const validationSchema = Yup.object().shape({
 	phone: Yup.string().length(19).required(),
 	password: Yup.string().min(8).max(64).required(),
 })
+
+const parsePhone = (phone: string): string => {
+	const match: string[] | null = phone.match(
+		/\+38(0\d{2})(\d{3})(\d{2})(\d{2})/
+	)
+	return match ? `+38 (${match[1]}) ${match[2]}-${match[3]}-${match[4]}` : ""
+}
 
 export default function LoginPage() {
 	const setUser = useAuthStore(state => state.setUser)
@@ -42,14 +49,14 @@ export default function LoginPage() {
 
 	const onSubmit = async (
 		values: LoginRequest,
-		helpers: FormikHelpers<LoginRequest>
+		actions: FormikHelpers<LoginRequest>
 	) => {
 		values.phone = values.phone
 			.replace(" (", "")
 			.replace(") ", "")
 			.replaceAll("-", "")
+		actions.setFieldValue("phone", parsePhone(values.phone))
 		mutate(values)
-		helpers.resetForm()
 	}
 
 	const formatPhone = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -100,7 +107,7 @@ export default function LoginPage() {
 						<label htmlFor="password">
 							Пароль*
 							<Field
-								type="text"
+								type="password"
 								name="password"
 								id="password"
 								placeholder="********"

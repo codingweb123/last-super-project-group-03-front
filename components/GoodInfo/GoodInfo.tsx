@@ -25,12 +25,12 @@ export default function GoodInfo({ good, sizes }: Props) {
 				className={css.img}
 				alt={good.name}
 			/>
-			<h3 className={css.h3}>
-				{good.name}
+			<div className={css.block}>
+				<h3 className={css.h3}>{good.name}</h3>
 				<span>
 					{good.price.value} {good.price.currency}
 				</span>
-			</h3>
+			</div>
 			<p className={css.p}>
 				<svg className="icon" width={16} height={16}>
 					<use href="/icons.svg#i-star-filled"></use>

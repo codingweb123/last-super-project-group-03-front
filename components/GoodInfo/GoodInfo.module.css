@@ -40,17 +40,27 @@
 	border-radius: 16px;
 }
 
-.h3 {
+.block {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	font-size: 18px;
-	font-weight: 600;
-	line-height: 1.5;
 	margin-top: 16px;
 }
 
-.h3 span {
+.h3 {
+	display: -webkit-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-clamp: 1;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	max-width: 210px;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.5;
+}
+
+.h3 ~ span {
 	font-size: 20px;
 	font-weight: 600;
 	line-height: 1.5;

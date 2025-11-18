@@ -17,7 +17,7 @@ export default function BasketModal() {
 
 	return (
 		<Modal onClose={onClose} modalClass={css.modal}>
-			<div className={css.container}>
+			<div className={`container ${css.container}`}>
 				<button className={css.closeBtn} onClick={onClose}>
 					<svg width={24} height={24}>
 						<use href="/icons.svg#i-cross"></use>

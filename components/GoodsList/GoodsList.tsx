@@ -53,7 +53,7 @@ export default function GoodsList({
 						slidesPerView: 2,
 					},
 					1440: {
-						slidesPerView: 3,
+						slidesPerView: 4,
 					},
 				}}>
 				{goods.map(good => (

@@ -134,7 +134,7 @@ export default function RegisterPage() {
 						<label htmlFor="password">
 							Пароль*
 							<Field
-								type="text"
+								type="password"
 								name="password"
 								id="password"
 								placeholder="********"

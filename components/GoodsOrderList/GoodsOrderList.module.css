@@ -145,7 +145,18 @@
 		gap: 32px;
 		width: 50%;
 	}
+	.modal .priceAmountDelete {
+		flex-wrap: nowrap;
+		gap: 8px;
+		margin: 0;
+	}
 	.priceAmountDelete p {
 		flex: unset;
+	}
+}
+
+@media screen and (min-width: 1440px) {
+	.modal .priceAmountDelete {
+		gap: 16px;
 	}
 }

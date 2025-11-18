@@ -64,8 +64,35 @@ export default function GoodForPurchase({ good }: Props) {
 	const checkStars = (checkOn: number): string =>
 		stars >= checkOn ? "-filled" : stars === checkOn - 0.5 ? "-half" : ""
 
-	const setBasketValues = (values: FormValues): void =>
-		setBasket([...basket, { ...values, id: _id }])
+	const setBasketValues = (values: FormValues): void => {
+		const newBasket = [...basket]
+		let found = false
+
+		newBasket.map((item, index) => {
+			if (
+				item.id === _id &&
+				item.color === values.color &&
+				item.size === values.size
+			) {
+				found = true
+				const newAmount = item.amount + values.amount
+				newBasket[index] = {
+					...newBasket[index],
+					amount: newAmount < 100 ? newAmount : 99,
+				}
+			}
+		})
+
+		if (!found) {
+			newBasket.push({
+				id: _id,
+				...values,
+				amount: values.amount < 100 ? values.amount : 99,
+			})
+		}
+
+		setBasket(newBasket)
+	}
 
 	const handleBuy = async (values: FormValues): Promise<void> => {
 		try {
