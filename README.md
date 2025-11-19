@@ -5,12 +5,11 @@
 ### *Modern clothing marketplace frontend built with Next.js & TypeScript*
 
 <img src="https://img.shields.io/badge/version-1.0.0-blue" />
-<img src="https://img.shields.io/badge/license-ISC-green" />
+<img src="https://img.shields.io/badge/license-Apache_2.0-green" />
 <img src="https://img.shields.io/badge/language-TypeScript-yellow" />
 <img src="https://img.shields.io/badge/framework-Next.js-black" />
 <img src="https://img.shields.io/badge/state-Zustand-orange" />
 <img src="https://img.shields.io/badge/api-React_Query-red" />
-<img src="https://img.shields.io/github/actions/workflow/status/codingweb123/last-super-project-group-03-front/ci.yml?branch=main" />
 
 ---
 
@@ -63,7 +62,7 @@ The app is powered by **Next.js + TypeScript** and uses a scalable and maintaina
 | Styling | **CSS Modules** |
 | Data Fetching | **React Query + Axios** |
 | Global State | **Zustand** |
-| Auth | Sessions / JWT (via backend API) |
+| Auth | Session (via backend API) |
 | Deployment | **Vercel** |
 | Code Quality | ESLint, Prettier |
 
@@ -152,7 +151,7 @@ npm run start
 
 ## 📜 **License**
 
-Distributed under the **ISC License**.
+Distributed under the **Apache 2.0 License**.
 
 ---
 
