@@ -98,32 +98,6 @@ export default function GoodsPage({ category }: Props) {
 	})
 
 	useEffect(() => {
-		const load = () => {
-			if (goodsData && isNewPortion) {
-				if (page === 1) {
-					setGoods(goodsData.goods)
-					setTotalPages(goodsData.totalPages)
-					setTotalGoods(goodsData.totalGoods)
-					if (filterCategory != "all")
-						setCurrentCategory(goodsData.goods?.[0].category.name ?? "all")
-					if (goodsData.goods?.[0].category.name === "Усі")
-						setCurrentCategory("all")
-				} else {
-					setGoods(prev => [...prev, ...goodsData.goods])
-				}
-				setIsNewPortion(false)
-			}
-		}
-
-		load()
-	}, [page, isNewPortion, goodsData, filterCategory])
-
-	useEffect(() => {
-		const loaded = () => setIsLoaded(true)
-		loaded()
-	}, [])
-
-	useEffect(() => {
 		const update = () => {
 			setPage(1)
 			setTotalPages(1)
@@ -139,6 +113,32 @@ export default function GoodsPage({ category }: Props) {
 		filterSizes,
 		filterCategory,
 	])
+
+	useEffect(() => {
+		const load = () => {
+			if (goodsData && isNewPortion) {
+				if (page === 1) {
+					setGoods(goodsData.goods)
+					setTotalPages(goodsData.totalPages)
+					setTotalGoods(goodsData.totalGoods)
+					if (filterCategory != "all")
+						setCurrentCategory(goodsData.goods?.[0]?.category?.name ?? "all")
+					if (goodsData.goods?.[0]?.category?.name === "Усі")
+						setCurrentCategory("all")
+				} else {
+					setGoods(prev => [...prev, ...goodsData.goods])
+				}
+				setIsNewPortion(false)
+			}
+		}
+
+		load()
+	}, [page, isNewPortion, goodsData, filterCategory])
+
+	useEffect(() => {
+		const loaded = () => setIsLoaded(true)
+		loaded()
+	}, [])
 
 	const loadMore = () => {
 		if (totalPages <= page) return
@@ -297,6 +297,7 @@ export default function GoodsPage({ category }: Props) {
 								/>
 							)
 						)}
+						{page} / {totalPages}
 						{page < totalPages && (
 							<button type="button" className={css.button} onClick={loadMore}>
 								Показати більше
