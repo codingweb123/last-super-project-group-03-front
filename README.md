@@ -1,36 +1,164 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+<div align="center">
 
-First, run the development server:
+# 👗 **Clothica — Frontend**
+### *Modern clothing marketplace frontend built with Next.js & TypeScript*
+
+<img src="https://img.shields.io/badge/version-1.0.0-blue" />
+<img src="https://img.shields.io/badge/license-ISC-green" />
+<img src="https://img.shields.io/badge/language-TypeScript-yellow" />
+<img src="https://img.shields.io/badge/framework-Next.js-black" />
+<img src="https://img.shields.io/badge/state-Zustand-orange" />
+<img src="https://img.shields.io/badge/api-React_Query-red" />
+<img src="https://img.shields.io/github/actions/workflow/status/codingweb123/last-super-project-group-03-front/ci.yml?branch=main" />
+
+---
+
+### 🔗 **Live Demo:**  
+👉 https://last-super-project-group-03-front.vercel.app/
+
+### 🧩 **Backend Repository:**  
+👉 https://github.com/codingweb123/last-super-project-group-03-back
+
+</div>
+
+---
+
+## 📍 **About the Project**
+
+**Clothica** is a modern web marketplace for clothing, built by **FlowDevs**.  
+This repository contains **only the Frontend** part of the application and is responsible for UI, client-side logic, routing, and API interactions.
+
+The app is powered by **Next.js + TypeScript** and uses a scalable and maintainable architecture with:
+
+- **Axios + React Query** — data fetching & caching
+- **Zustand** — global state management
+- **CSS Modules** — modular styling
+- **Vercel** — hosting & production deployments
+
+---
+
+## ✨ **Features**
+
+| Feature | Description |
+|---------|------------|
+| 🛍️ Product catalog | Paginated list of clothing items with sorting & filters |
+| 📄 Product page | Images, price, details, reviews |
+| ❤️ Reviews | Users can post and view product reviews |
+| 🧺 Shopping cart | Add, remove, update items |
+| 🔑 Authentication | Register, login, token-based auth |
+| 👤 User profile | Manage personal info & orders |
+| 📦 Orders | Create and view purchase history |
+| 🏷 Categories | Catalog structured by categories |
+| 🔍 Filters & Search | Filter by brand, category, size, etc. |
+
+---
+
+## 🏗 **Tech Stack**
+
+| Category | Technology |
+|----------|------------|
+| Framework | **Next.js 14+** |
+| Language | **TypeScript** |
+| Styling | **CSS Modules** |
+| Data Fetching | **React Query + Axios** |
+| Global State | **Zustand** |
+| Auth | Sessions / JWT (via backend API) |
+| Deployment | **Vercel** |
+| Code Quality | ESLint, Prettier |
+
+---
+
+## 📂 **Project Structure**
+
+```bash
+📦 last-super-project-group-03-front
+├── app/                # Next.js routes & pages
+├── components/         # UI components
+├── config/             # Global app configuration
+├── lib/                # API clients & utility functions
+├── types/              # Shared TypeScript types
+├── public/             # Static assets
+└── styles/             # CSS modules
+```
+
+---
+
+## 🔗 **Communication With Backend**
+
+This frontend communicates with a dedicated backend located here:
+
+👉 **Backend:** https://github.com/codingweb123/last-super-project-group-03-back
+
+### **📡 API Characteristics:**
+
+- Session Authorization
+- Entity-based API services (goods, users, orders, reviews)
+- Data caching via React Query
+- Error handling and request abstraction layer
+- Axios instance with interceptors
+
+---
+
+## 🚀 **Getting Started**
+
+### **1️⃣ Install dependencies**
+
+```bash
+npm install
+```
+
+or
+
+```bash
+bun install
+```
+
+---
+
+### **2️⃣ Start development server**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **3️⃣ Build for production**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🧪 **Roadmap**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [ ] Recommendation engine (AI-based)
+- [ ] Admin dashboard for product management
+- [ ] Payment integration (Stripe)
+- [ ] i18n internationalization support
+- [ ] Unit + E2E testing (Jest / Cypress)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 👥 **Team**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Name | Role |
+|------|------|
+| FlowDevs | Full-stack development team |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📜 **License**
+
+Distributed under the **ISC License**.
+
+---
+
+<div align="center">
+
+💛 *Made with passion by FlowDevs*
+
+</div>
