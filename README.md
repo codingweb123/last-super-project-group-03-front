@@ -79,7 +79,6 @@ The app is powered by **Next.js + TypeScript** and uses a scalable and maintaina
 ├── lib/                # API clients & utility functions
 ├── types/              # Shared TypeScript types
 ├── public/             # Static assets
-└── styles/             # CSS modules
 ```
 
 ---
