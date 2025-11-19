@@ -281,16 +281,13 @@ export default function GoodsPage({ category }: Props) {
 					</div>
 					<div className={css.goodsBlock}>
 						{goods && totalGoods ? (
-							<>
-								<GoodsList
-									sizes={
-										"(max-width: 768px) 335px, (max-width: 1439px) 198px, (min-width: 1440px) 304px"
-									}
-									goods={goods}
-									paginationClass={css.list}
-								/>
-								{page} / {totalPages}
-							</>
+							<GoodsList
+								sizes={
+									"(max-width: 768px) 335px, (max-width: 1439px) 198px, (min-width: 1440px) 304px"
+								}
+								goods={goods}
+								paginationClass={css.list}
+							/>
 						) : (
 							isLoaded && (
 								<MessageNoInfo
