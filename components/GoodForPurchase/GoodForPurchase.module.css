@@ -142,7 +142,9 @@
 	opacity: 0;
 	pointer-events: none;
 }
-.radioButtons input:checked + label {
+.radioButtons input:checked + label,
+.radioButtons label:hover,
+.radioButtons label:hover {
 	color: var(--color-white);
 	border-color: var(--color-neutral-darkest);
 	background: var(--color-neutral-darkest);

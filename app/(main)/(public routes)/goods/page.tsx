@@ -293,11 +293,11 @@ export default function GoodsPage({ category }: Props) {
 								<MessageNoInfo
 									text="За вашим запитом не знайдено жодних товарів, спробуйте змінити фільтри, або скинути їх"
 									buttonText="Скинути фільтри"
-									onClick={clearFilters}
+										onClick={clearFilters}
+										globalClass="messageNoInfoGoodsPage"
 								/>
 							)
 						)}
-						{page} / {totalPages}
 						{page < totalPages && (
 							<button type="button" className={css.button} onClick={loadMore}>
 								Показати більше

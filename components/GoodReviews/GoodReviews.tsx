@@ -4,6 +4,8 @@
 // I forgive you
 // Team Lead
 
+// 🥺🤗
+
 "use client"
 
 import { useState, useId } from "react"
@@ -31,7 +33,7 @@ Yup.setLocale({
 
 const validationSchema = Yup.object().shape({
 	author: Yup.string().min(2).max(53).required(),
-	description: Yup.string().max(500),
+	description: Yup.string().max(500).required(),
 	rate: Yup.number().oneOf([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]).required(),
 })
 
@@ -131,6 +133,7 @@ export default function GoodReviews({ feedbacks, goodId }: Props) {
 					text="У цього товару ще немає відгуків"
 					buttonText="Залишити відгук"
 					onClick={handleOpenModal}
+					globalClass="messageNoInfoGoodReviews"
 				/>
 			)}
 			{isModal && (

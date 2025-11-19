@@ -36,6 +36,10 @@
 	}
 }
 
+:global(.messageNoInfoGoodReviews) {
+	margin-bottom: 124px;
+}
+
 .sliderButtons {
 	display: flex;
 	justify-content: center;
@@ -344,6 +348,10 @@
 }
 
 @media screen and (min-width: 1440px) {
+	:global(.messageNoInfoGoodReviews) {
+		margin-bottom: 172px;
+	}
+
 	.sliderButtons {
 		margin-bottom: 122px;
 	}
