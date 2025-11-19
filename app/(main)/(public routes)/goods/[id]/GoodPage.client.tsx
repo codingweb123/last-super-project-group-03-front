@@ -1,5 +1,5 @@
 "use client"
-
+import css from "./GoodPage.module.css"
 import { useRouter } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 import GoodForPurchase from "@/components/GoodForPurchase/GoodForPurchase"
@@ -23,7 +23,7 @@ export default function GoodPageClient({ id }: Props) {
 	})
 
 	return (
-		<div className="container">
+		<div className={`${css.container} container`}>
 			{good ? (
 				<>
 					<GoodForPurchase good={good} />
@@ -34,6 +34,7 @@ export default function GoodPageClient({ id }: Props) {
 					text="Товар не знайдено"
 					buttonText="Повернутися до товарів"
 					onClick={() => router.push(Routes.Goods)}
+					globalClass="messageNoInfoGoodPage"
 				/>
 			)}
 		</div>

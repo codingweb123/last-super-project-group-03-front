@@ -52,3 +52,9 @@
 		width: auto;
 	}
 }
+
+@media screen and (min-width: 1440px) {
+	.messageContainer {
+		max-width: 753px;
+	}
+}

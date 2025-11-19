@@ -77,6 +77,10 @@
 	transform: rotate(-90deg);
 }
 
+:global(.messageNoInfoGoodsPage) {
+	margin: 0 auto;
+}
+
 .button {
 	display: flex;
 	justify-content: center;
@@ -165,6 +169,9 @@
 }
 
 @media screen and (min-width: 1440px) {
+	.goodsBlock {
+		width: 977px;
+	}
 	.list li {
 		max-width: calc((100% - 64px) / 3);
 		height: 519px;

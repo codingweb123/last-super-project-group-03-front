@@ -6,11 +6,12 @@ interface Props {
 	text: string
 	buttonText: string
 	onClick: () => void
+	globalClass?: string
 }
 
-export default function MessageNoInfo({ text, buttonText, onClick }: Props) {
+export default function MessageNoInfo({ text, buttonText, onClick, globalClass = "" }: Props) {
 	return (
-		<div className={css.messageContainer}>
+		<div className={`${css.messageContainer} ${globalClass}`}>
 			<p>{text}</p>
 			<button onClick={onClick}>{buttonText}</button>
 		</div>

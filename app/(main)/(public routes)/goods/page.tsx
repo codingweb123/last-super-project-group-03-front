@@ -281,23 +281,26 @@ export default function GoodsPage({ category }: Props) {
 					</div>
 					<div className={css.goodsBlock}>
 						{goods && totalGoods ? (
-							<GoodsList
-								sizes={
-									"(max-width: 768px) 335px, (max-width: 1439px) 198px, (min-width: 1440px) 304px"
-								}
-								goods={goods}
-								paginationClass={css.list}
-							/>
+							<>
+								<GoodsList
+									sizes={
+										"(max-width: 768px) 335px, (max-width: 1439px) 198px, (min-width: 1440px) 304px"
+									}
+									goods={goods}
+									paginationClass={css.list}
+								/>
+								{page} / {totalPages}
+							</>
 						) : (
 							isLoaded && (
 								<MessageNoInfo
 									text="За вашим запитом не знайдено жодних товарів, спробуйте змінити фільтри, або скинути їх"
 									buttonText="Скинути фільтри"
-									onClick={clearFilters}
+										onClick={clearFilters}
+										globalClass="messageNoInfoGoodsPage"
 								/>
 							)
 						)}
-						{page} / {totalPages}
 						{page < totalPages && (
 							<button type="button" className={css.button} onClick={loadMore}>
 								Показати більше
